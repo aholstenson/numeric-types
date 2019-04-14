@@ -12,29 +12,39 @@ and TypeScript.
 npm install numeric-types
 ```
 
-## Status
+## Features and status
 
 This is currently an early release.
+
+* Rounding modes: up, down, half down, half even, half up, floor and ceiling
+* Decimal number representation
+  * `Decimal` on top of `number` with limited precision of 15 digits
+  * __Planned__: `BigDecimal` for more precise numbers, with up to `Number.MAX_SAFE_INTEGER` digits
+  * Basic math operations: add, subtract, multiply, divide
+* Integer representation
+  * __Planned__: `Integer` for integers between `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`
+  * __Planned__: `BigInteger` for large integers
 
 ## API
 
 In this library all numeric types are immutable, so functions always return a 
 new instance. Each numeric type provides a limited API to support their
-creation and basic use. Operations on the number types is provided as separate
-functions that can be imported. This design is to allow the library to take
-advantage of tree-shaking.
+creation and basic use.
 
-### `static NumericType.fromNumber(1.2): NumericType`
+Operations on the number types is provided as separate functions that can be 
+imported. This design is to allow the library to take advantage of tree-shaking.
 
-Create an instance of the numeric type from a regular JavaScript number.
+* `static NumericType.fromNumber(value: number): NumericType`
 
-### `static NumericType.fromString('1.2e10'): NumericType`
+  Create an instance of the numeric type from a regular JavaScript number.
 
-Create an instance of the numeric type from a string.
+* `static NumericType.fromString(value: string): NumericType`
 
-### `numericType.toString()`
+  Create an instance of the numeric type from a string.
 
-Turn the numeric type into a string representation supported by `fromString`.
+* `numericType.toString(): string`
+
+  Turn the numeric type into a string representation supported by `fromString`.
 
 ## `MathContext` and rounding
 
