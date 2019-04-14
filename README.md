@@ -51,6 +51,17 @@ const contextWithScale = MathContext.ofScale(2, RoundingMode.HalfUp);
 const contextWithPrecision = MathContext.ofPrecision(10, RoundingMode.Ceiling);
 ```
 
+### Rounding modes
+
+* `RoundingMode.Down` - Round towards zero.
+* `RoundingMode.Up` - Round away from zero.
+* `RoundingMode.HalfDown` - Round towards the nearest neighbor, but if in the middle round towards zero.
+* `RoundingMode.HalfEven` - Round towards the nearest neighbor, but if in the middle round towards the even neighbor.
+* `RoundingMode.HalfUp` - Round towards the nearest neighbor, but if in the middle round away from zero.
+* `RoundingMode.Floor` - Round towards negative infinity.
+* `RoundingMode.Ceiling` - Round towards positive infinity.
+* `RoundingMode.Unnecessary` - Do not round, instead throw an error if rounding is required.
+
 ## Type: Decimal
 
 `Decimal` is an implementation of a numeric type that avoids the rounding
