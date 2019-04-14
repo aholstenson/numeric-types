@@ -6,7 +6,7 @@ const PATTERN = /^([-\+]?\d+)(?:\.(\d*))?(?:e([-\+]?\d+))?$/;
 /**
  * Operation that parses a string to a decimal.
  */
-export function convertString<C, D extends BaseDecimal<C>>(math: DecimalSPI<C, D>, input: string): D {
+export function convertString<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, input: string): D {
 	if(typeof input !== 'string') {
 		throw new Error('Can only be used with a string, received object with type ' + typeof input);
 	}
@@ -19,7 +19,7 @@ export function convertString<C, D extends BaseDecimal<C>>(math: DecimalSPI<C, D
 	const integer = data[1];
 	const fraction = data[2] || '';
 	// The coefficient is the part before the dot combined with the fraction
-	const coefficient = math.parseInt(integer + fraction);
+	const coefficient = spi.parseInt(integer + fraction);
 
 	/*
 	 * The exponent takes into account the e-part of the string and also
@@ -28,5 +28,5 @@ export function convertString<C, D extends BaseDecimal<C>>(math: DecimalSPI<C, D
 	let exponent = data[3] ? Number.parseInt(data[3], 10) : 0;
 	exponent -= fraction.length;
 
-	return math.newInstance(coefficient, exponent);
+	return spi.newInstance(coefficient, exponent);
 }

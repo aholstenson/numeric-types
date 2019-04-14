@@ -5,22 +5,22 @@ import { DecimalSPI } from '../decimal-spi';
 /**
  * Perform a reduction of the given decimal value.
  */
-export function reduceOp<C, D extends BaseDecimal<C>>(math: DecimalSPI<C, D>, a: D): D {
+export function reduceOp<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, a: D): D {
 
 	let coefficient = a[COEFFICIENT];
 	let exponent = a[EXPONENT];
 
 	// TODO: Potential optimization to reduce by several zeros at once
 
-	while(! math.isZero(coefficient) && math.isMultipleOf(coefficient, math.TEN)) {
-		coefficient = math.divide(coefficient, math.TEN);
+	while(! spi.isZero(coefficient) && spi.isMultipleOf(coefficient, spi.TEN)) {
+		coefficient = spi.divide(coefficient, spi.TEN);
 		exponent++;
 	}
 
-	if(math.isZero(coefficient)) {
+	if(spi.isZero(coefficient)) {
 		// If the new result is zero - return the static value
-		return math.DECIMAL_ZERO;
+		return spi.DECIMAL_ZERO;
 	}
 
-	return math.newInstance(coefficient, exponent);
+	return spi.newInstance(coefficient, exponent);
 }

@@ -5,12 +5,12 @@ import { DecimalSPI } from '../decimal-spi';
 /**
  * Operation that converts a decimal into a base-10 string.
  */
-export function toStringOp<C, D extends BaseDecimal<C>>(math: DecimalSPI<C, D>, a: D): string {
+export function toStringOp<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, a: D): string {
 	const exponent = a[EXPONENT];
 	const coefficient = a[COEFFICIENT];
 
 	// Start with non-negative string representation
-	let value = math.toString(math.absolute(coefficient));
+	let value = spi.toString(spi.absolute(coefficient));
 
 	if(exponent > 0) {
 		// A positive exponent means we need to zero-pad things
@@ -33,7 +33,7 @@ export function toStringOp<C, D extends BaseDecimal<C>>(math: DecimalSPI<C, D>, 
 	}
 
 	// Check if a - needs to be added
-	return math.isNegative(coefficient)
+	return spi.isNegative(coefficient)
 		? '-' + value
 		: value;
 }
