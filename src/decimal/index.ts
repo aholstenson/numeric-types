@@ -2,10 +2,14 @@
 // Decimal types
 export * from './decimal-normal';
 
-// Pick-n-mix functions
-export * from './add';
+// Basic operations
 export * from './compare';
+export * from './scale';
+export * from './round';
+export * from './toString';
+
+// Math operations
+export * from './add';
 export * from './subtract';
 export * from './multiply';
 export * from './divide';
-export * from './toString';
