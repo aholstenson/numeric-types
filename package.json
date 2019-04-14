@@ -1,6 +1,6 @@
 {
   "name": "numeric-types",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Numeric types such as precise decimals",
   "scripts": {
     "test": "jest",
