@@ -6,7 +6,7 @@ import { BaseDecimal } from './decimal-base';
  * @param {BaseDecimal} a
  * @param {BaseDecimal} b
  */
-export function validateCompatible<C, D extends BaseDecimal<C>>(a: D, b: D) {
+export function validateCompatible<D extends BaseDecimal<any>>(a: D, b: D) {
 	if(! a || ! b) {
 		throw new Error('Two decimal instances expected');
 	}
