@@ -27,3 +27,13 @@ export class MathContext {
 		return new MathContext(roundingMode, precision, 0);
 	}
 }
+
+/**
+ * Get if a given context has a scale or precision set.
+ *
+ * @param context
+ */
+export function hasScaleOrPrecision(context: MathContext) {
+	return typeof context.scale !== 'undefined'
+		|| typeof context.precision !== 'undefined';
+}
