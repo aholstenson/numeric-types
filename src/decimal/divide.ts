@@ -5,7 +5,18 @@ import { SPI } from './ops/symbols';
 import { MathContext } from '../context';
 import { divideOp } from './ops/divide';
 
-export function divide<C, D extends BaseDecimal<C>>(a: D, b: D, ctx: MathContext): D {
+/**
+ * Divide a number with another one.
+ *
+ * @param a
+ *   first number to divide
+ * @param b
+ *   number to divide by
+ * @param context
+ *   context with information about the requested scale and how to perform
+ *   rounding
+ */
+export function divide<D extends BaseDecimal<any>>(a: D, b: D, context: MathContext): D {
 	validateCompatible(a, b);
-	return divideOp(a[SPI], a, b, ctx);
+	return divideOp(a[SPI], a, b, context);
 }
