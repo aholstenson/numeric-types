@@ -1,8 +1,10 @@
-import { EXPONENT, COEFFICIENT } from './symbols';
 import { BaseDecimal } from '../decimal-base';
 import { DecimalSPI } from '../decimal-spi';
 
-import { rescaleCoefficient } from './rescaleCoefficient';
+import { EXPONENT, COEFFICIENT } from './symbols';
+
+import { rescaleCoefficient } from './rescaling';
+import { RoundingMode } from '../../rounding-mode';
 
 /**
  *
@@ -31,8 +33,8 @@ export function compareOp<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, a:
 	}
 
 	const baseExponent = Math.min(a[EXPONENT], b[EXPONENT]);
-	const aScaledCoefficient = rescaleCoefficient(spi, a, baseExponent);
-	const bScaledCoefficient = rescaleCoefficient(spi, b, baseExponent);
+	const aScaledCoefficient = rescaleCoefficient(spi, aCoefficient, a[EXPONENT], baseExponent, RoundingMode.Down);
+	const bScaledCoefficient = rescaleCoefficient(spi, bCoefficient, b[EXPONENT], baseExponent, RoundingMode.Down);
 
 	return spi.compare(aScaledCoefficient, bScaledCoefficient);
 }
