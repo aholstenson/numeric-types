@@ -1,14 +1,8 @@
 import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols';
 
 import { DecimalSPI } from './decimal-spi';
-import { MathContext } from '../context';
 
-import { add } from './add';
-import { subtract } from './subtract';
-import { multiply } from './multiply';
-import { compare } from './compare';
 import { toString } from './toString';
-import { divide } from './divide';
 
 /**
  * Base class for decimal values. Stores numbers in two parts, a coefficent and
@@ -32,26 +26,6 @@ export class BaseDecimal<C> {
 		this[COEFFICIENT] = coefficient;
 	}
 
-	public add(b: this): this {
-		return add(this, b);
-	}
-
-	public subtract(b: this): this {
-		return subtract(this, b);
-	}
-
-	public multiply(b: this): this {
-		return multiply(this, b);
-	}
-
-	public divide(b: this, ctx: MathContext): this {
-		return divide(this, b, ctx);
-	}
-
-	public compare(b: this): number {
-		return compare(this, b);
-	}
-
 	public toString(): string {
 		return toString(this);
 	}
@@ -61,5 +35,3 @@ export class BaseDecimal<C> {
 		return this.constructor[SPI];
 	}
 }
-
-
