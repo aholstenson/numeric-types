@@ -5,7 +5,7 @@ import { add } from '../../src/decimal/add';
 import { subtract } from '../../src/decimal/subtract';
 import { multiply } from '../../src/decimal/multiply';
 import { divide } from '../../src/decimal/divide';
-import { compare } from '../../src/decimal/compare';
+import { compare, isEqual, isGreaterThanOrEqual, isGreaterThan, isLessThanOrEqual, isLessThan } from '../../src/decimal/compare';
 
 describe('Decimal', function() {
 	describe('Normal', function() {
@@ -196,29 +196,85 @@ describe('Decimal', function() {
 			it('1 == 1', function() {
 				const a = Decimal.fromNumber(1);
 				const b = Decimal.fromNumber(1);
-				const r = compare(a, b);
-				expect(r).toEqual(0);
+
+				expect(compare(a, b)).toEqual(0);
+				expect(isEqual(a, b)).toEqual(true);
+				expect(isLessThan(a, b)).toEqual(false);
+				expect(isLessThanOrEqual(a, b)).toEqual(true);
+				expect(isGreaterThan(a, b)).toEqual(false);
+				expect(isGreaterThanOrEqual(a, b)).toEqual(true);
+			});
+
+			it('0 == 0', function() {
+				const a = Decimal.fromNumber(0);
+				const b = Decimal.fromNumber(0);
+
+				expect(compare(a, b)).toEqual(0);
+				expect(isEqual(a, b)).toEqual(true);
+				expect(isLessThan(a, b)).toEqual(false);
+				expect(isLessThanOrEqual(a, b)).toEqual(true);
+				expect(isGreaterThan(a, b)).toEqual(false);
+				expect(isGreaterThanOrEqual(a, b)).toEqual(true);
 			});
 
 			it('2 > 1', function() {
 				const a = Decimal.fromNumber(2);
 				const b = Decimal.fromNumber(1);
-				const r = compare(a, b);
-				expect(r).toEqual(1);
+
+				expect(compare(a, b)).toEqual(1);
+				expect(isEqual(a, b)).toEqual(false);
+				expect(isLessThan(a, b)).toEqual(false);
+				expect(isLessThanOrEqual(a, b)).toEqual(false);
+				expect(isGreaterThan(a, b)).toEqual(true);
+				expect(isGreaterThanOrEqual(a, b)).toEqual(true);
 			});
 
 			it('1 < 2', function() {
 				const a = Decimal.fromNumber(1);
 				const b = Decimal.fromNumber(2);
-				const r = compare(a, b);
-				expect(r).toEqual(-1);
+
+				expect(compare(a, b)).toEqual(-1);
+				expect(isEqual(a, b)).toEqual(false);
+				expect(isLessThan(a, b)).toEqual(true);
+				expect(isLessThanOrEqual(a, b)).toEqual(true);
+				expect(isGreaterThan(a, b)).toEqual(false);
+				expect(isGreaterThanOrEqual(a, b)).toEqual(false);
 			});
 
 			it('2.2 > 1.02', function() {
 				const a = Decimal.fromNumber(2.2);
 				const b = Decimal.fromNumber(1.02);
-				const r = compare(a, b);
-				expect(r).toEqual(1);
+
+				expect(compare(a, b)).toEqual(1);
+				expect(isEqual(a, b)).toEqual(false);
+				expect(isLessThan(a, b)).toEqual(false);
+				expect(isLessThanOrEqual(a, b)).toEqual(false);
+				expect(isGreaterThan(a, b)).toEqual(true);
+				expect(isGreaterThanOrEqual(a, b)).toEqual(true);
+			});
+
+			it('2.2 > -1.02', function() {
+				const a = Decimal.fromNumber(2.2);
+				const b = Decimal.fromNumber(-1.02);
+
+				expect(compare(a, b)).toEqual(1);
+				expect(isEqual(a, b)).toEqual(false);
+				expect(isLessThan(a, b)).toEqual(false);
+				expect(isLessThanOrEqual(a, b)).toEqual(false);
+				expect(isGreaterThan(a, b)).toEqual(true);
+				expect(isGreaterThanOrEqual(a, b)).toEqual(true);
+			});
+
+			it('-2.2 < 1.02', function() {
+				const a = Decimal.fromNumber(-2.2);
+				const b = Decimal.fromNumber(1.02);
+
+				expect(compare(a, b)).toEqual(-1);
+				expect(isEqual(a, b)).toEqual(false);
+				expect(isLessThan(a, b)).toEqual(true);
+				expect(isLessThanOrEqual(a, b)).toEqual(true);
+				expect(isGreaterThan(a, b)).toEqual(false);
+				expect(isGreaterThanOrEqual(a, b)).toEqual(false);
 			});
 		});
 	});

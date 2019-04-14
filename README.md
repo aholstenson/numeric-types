@@ -83,6 +83,26 @@ const { operationHere, anotherOperation } = require('numeric-types/decimal');
   Compare two decimal numbers. This method will return `0` if the numbers are
   the same, `-1` if `a` is less than `b` and `1` if `a` is greater than `b`.
 
+* `isEqual(a: DecimalType, b: DecimalType): boolean`
+
+  Get if two decimal numbers are equal.
+
+* `isLessThan(a: DecimalType, b: DecimalType): boolean`
+
+  Get if the decimal number `a` is less than the number `b`.
+
+* `isLessThanOrEqual(a: DecimalType, b: DecimalType): boolean`
+
+  Get if the decimal number `a` is less than or equal to the number `b`.
+
+* `isGreaterThan(a: DecimalType, b: DecimalType): boolean`
+
+  Get if the decimal number `a` is greater than the number `b`.
+
+* `isGreaterThanOrEqual(a: DecimalType, b: DecimalType): boolean`
+
+  Get if the decimal number `a` is greater than or equal to the number `b`.
+
 * `toString(a: DecimalType): string`
 
   Turn a decimal numbers into its string representation.
