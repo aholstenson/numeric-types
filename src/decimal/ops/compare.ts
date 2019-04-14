@@ -12,7 +12,7 @@ import { RoundingMode } from '../../rounding-mode';
  * @param a
  * @param b
  */
-export function compareOp<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, a: D, b: D): number {
+export function compareOp<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, a: D, b: D): -1 | 0 | 1 {
 	const aCoefficient = a[COEFFICIENT];
 	const bCoefficient = b[COEFFICIENT];
 

@@ -62,7 +62,7 @@ export interface DecimalSPI<C, D extends BaseDecimal<C>> {
 	 * @param a
 	 * @param b
 	 */
-	compare(a: C, b: C): number;
+	compare(a: C, b: C): -1 | 0 | 1;
 
 	/**
 	 * Parse an integer turning it into a number.
