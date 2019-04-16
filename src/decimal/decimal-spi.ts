@@ -1,6 +1,10 @@
-import { BaseDecimal } from './decimal-base';
+import { AbstractDecimal } from './abstract-decimal';
 
-export interface DecimalSPI<C, D extends BaseDecimal<C>> {
+/**
+ * Service Provider Interface for supporting a decimal implementation. This
+ * SPI abstract away common operations on different types of coefficients.
+ */
+export interface DecimalSPI<C, D extends AbstractDecimal<C>> {
 
 	DECIMAL_ZERO: D;
 	DECIMAL_ONE: D;

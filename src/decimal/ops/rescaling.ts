@@ -1,4 +1,4 @@
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 import { EXPONENT, COEFFICIENT } from './symbols';
@@ -10,7 +10,7 @@ import { round } from './rounding';
 /**
  * Rescale the given number to the scale specified by the given math context.
  */
-export function rescaleOp<C, D extends BaseDecimal<any>>(
+export function rescaleOp<C, D extends AbstractDecimal<any>>(
 	spi: DecimalSPI<C, D>,
 	a: D,
 	context: MathContext
@@ -22,7 +22,7 @@ export function rescaleOp<C, D extends BaseDecimal<any>>(
  * Rescale a number represented via coefficient and exponent to the scale
  * defined by the given math context.
  */
-export function rescaleCoefficientAndExponent<C, D extends BaseDecimal<any>>(
+export function rescaleCoefficientAndExponent<C, D extends AbstractDecimal<any>>(
 	spi: DecimalSPI<C, D>,
 	coefficient: C,
 	exponent: number,
@@ -57,7 +57,7 @@ export function rescaleCoefficientAndExponent<C, D extends BaseDecimal<any>>(
  * @param context
  * @param defaultExponent
  */
-export function calculateExponent<C, D extends BaseDecimal<any>>(
+export function calculateExponent<C, D extends AbstractDecimal<any>>(
 	spi: DecimalSPI<C, D>,
 	coefficient: C,
 	exponent: number,
@@ -94,7 +94,7 @@ export function calculateExponent<C, D extends BaseDecimal<any>>(
  * @param roundingMode
  *   the rounding mode to use for the rescale
  */
-export function rescaleCoefficient<C, D extends BaseDecimal<C>>(
+export function rescaleCoefficient<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
 	coefficient: C,
 	exponent: number,

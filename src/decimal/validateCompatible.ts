@@ -1,12 +1,12 @@
-import { BaseDecimal } from './decimal-base';
+import { AbstractDecimal } from './abstract-decimal';
 
 /**
  * Validate that the two supplied decimal instances are compatible.
  *
- * @param {BaseDecimal} a
- * @param {BaseDecimal} b
+ * @param {AbstractDecimal} a
+ * @param {AbstractDecimal} b
  */
-export function validateCompatible<D extends BaseDecimal<any>>(a: D, b: D) {
+export function validateCompatible<D extends AbstractDecimal<any>>(a: D, b: D) {
 	if(! a || ! b) {
 		throw new Error('Two decimal instances expected');
 	}

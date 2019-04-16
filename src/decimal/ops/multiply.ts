@@ -1,4 +1,4 @@
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 import { EXPONENT, COEFFICIENT } from './symbols';
@@ -9,10 +9,10 @@ import { rescaleCoefficientAndExponent } from './rescaling';
 /**
  * Operation that multiplies two values with each other.
  *
- * @param {BaseDecimal} a
- * @param {BaseDecimal} b
+ * @param {AbstractDecimal} a
+ * @param {AbstractDecimal} b
  */
-export function multiplyOp<C, D extends BaseDecimal<C>>(
+export function multiplyOp<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
 	a: D,
 	b: D,

@@ -1,4 +1,4 @@
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 import { MathContext } from '../../context';
@@ -9,10 +9,10 @@ import { rescaleCoefficientAndExponent } from './rescaling';
 /**
  * Operation that subtract the decimal value b from a.
  *
- * @param {BaseDecimal} a
- * @param {BaseDecimal} b
+ * @param {AbstractDecimal} a
+ * @param {AbstractDecimal} b
  */
-export function subtractOp<C, D extends BaseDecimal<C>>(
+export function subtractOp<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
 	a: D,
 	b: D,

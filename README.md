@@ -88,6 +88,14 @@ const ab = multiply(a, b);
 console.log(ab.toString());
 ```
 
+Types are available for TypeScript:
+
+```typescript
+import { AbstractDecimal, Decimal } from 'numeric-types/decimal';
+
+const decimal: AbstractDecimal<any> = Decimal.fromNumber(0.1);
+```
+
 ### Operations
 
 These operations are available from `numeric-types/decimal`. Import them

@@ -1,4 +1,4 @@
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 import { EXPONENT, COEFFICIENT } from './symbols';
@@ -10,7 +10,7 @@ import { calculateExponent } from './rescaling';
 /**
  * Perform a reduction of the given decimal value.
  */
-export function divideOp<C, D extends BaseDecimal<C>>(
+export function divideOp<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
 	a: D,
 	b: D,

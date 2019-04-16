@@ -1,11 +1,11 @@
 import { EXPONENT, COEFFICIENT } from './symbols';
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 /**
  * Perform a reduction of the given decimal value.
  */
-export function reduceOp<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, a: D): D {
+export function reduceOp<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, a: D): D {
 
 	let coefficient = a[COEFFICIENT];
 	let exponent = a[EXPONENT];

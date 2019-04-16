@@ -1,4 +1,4 @@
-import { BaseDecimal } from './decimal-base';
+import { AbstractDecimal } from './abstract-decimal';
 import { SPI } from './ops/symbols';
 
 import { MathContext } from '../context';
@@ -12,6 +12,6 @@ import { rescaleOp } from './ops/rescaling';
  * @param context
  *   context to use for scale
  */
-export function scale<D extends BaseDecimal<any>>(a: D, context: MathContext): D {
+export function scale<D extends AbstractDecimal<any>>(a: D, context: MathContext): D {
 	return rescaleOp(a[SPI], a, context);
 }

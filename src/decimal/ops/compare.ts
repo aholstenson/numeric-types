@@ -1,4 +1,4 @@
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 import { EXPONENT, COEFFICIENT } from './symbols';
@@ -12,7 +12,7 @@ import { RoundingMode } from '../../rounding-mode';
  * @param a
  * @param b
  */
-export function compareOp<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, a: D, b: D): -1 | 0 | 1 {
+export function compareOp<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, a: D, b: D): -1 | 0 | 1 {
 	const aCoefficient = a[COEFFICIENT];
 	const bCoefficient = b[COEFFICIENT];
 

@@ -1,4 +1,4 @@
-import { BaseDecimal } from './decimal-base';
+import { AbstractDecimal } from './abstract-decimal';
 import { validateCompatible } from './validateCompatible';
 import { SPI } from './ops/symbols';
 
@@ -16,7 +16,7 @@ import { divideOp } from './ops/divide';
  *   context with information about the requested scale and how to perform
  *   rounding
  */
-export function divide<D extends BaseDecimal<any>>(a: D, b: D, context: MathContext): D {
+export function divide<D extends AbstractDecimal<any>>(a: D, b: D, context: MathContext): D {
 	validateCompatible(a, b);
 	return divideOp(a[SPI], a, b, context);
 }

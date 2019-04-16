@@ -1,4 +1,4 @@
-import { BaseDecimal } from './decimal-base';
+import { AbstractDecimal } from './abstract-decimal';
 import { SPI } from './ops/symbols';
 
 import { rescaleOp } from './ops/rescaling';
@@ -13,6 +13,6 @@ import { RoundingMode } from '../rounding-mode';
  * @param roundingMode
  *   the rounding mode to use, or HalfUp if not specified
  */
-export function round<D extends BaseDecimal<any>>(a: D, roundingMode?: RoundingMode): D {
+export function round<D extends AbstractDecimal<any>>(a: D, roundingMode?: RoundingMode): D {
 	return rescaleOp(a[SPI], a, { scale: 0, roundingMode: roundingMode || RoundingMode.HalfUp });
 }

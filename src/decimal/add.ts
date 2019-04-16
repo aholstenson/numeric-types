@@ -1,4 +1,4 @@
-import { BaseDecimal } from './decimal-base';
+import { AbstractDecimal } from './abstract-decimal';
 import { validateCompatible } from './validateCompatible';
 import { SPI } from './ops/symbols';
 
@@ -15,7 +15,7 @@ import { MathContext } from '../context';
  * @param context
  *   optional context with information about scale/precision
  */
-export function add<D extends BaseDecimal<any>>(a: D, b: D, context?: MathContext): D {
+export function add<D extends AbstractDecimal<any>>(a: D, b: D, context?: MathContext): D {
 	validateCompatible(a, b);
 	return addOp(a[SPI], a, b, context);
 }

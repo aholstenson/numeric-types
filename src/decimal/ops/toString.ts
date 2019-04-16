@@ -1,11 +1,11 @@
 import { EXPONENT, COEFFICIENT } from './symbols';
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 /**
  * Operation that converts a decimal into a base-10 string.
  */
-export function toStringOp<C, D extends BaseDecimal<C>>(spi: DecimalSPI<C, D>, a: D): string {
+export function toStringOp<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, a: D): string {
 	const exponent = a[EXPONENT];
 	const coefficient = a[COEFFICIENT];
 

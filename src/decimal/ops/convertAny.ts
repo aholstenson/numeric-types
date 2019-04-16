@@ -1,10 +1,10 @@
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 import { convertNumber } from './convertNumber';
 import { convertString } from './convertString';
 
-export function convertAny<C, D extends BaseDecimal<C>>(
+export function convertAny<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
 	input: number | string | D
 ): D {
@@ -12,7 +12,7 @@ export function convertAny<C, D extends BaseDecimal<C>>(
 		return convertNumber(spi, input);
 	} else if(typeof input === 'string') {
 		return convertString(spi, input);
-	} else if(input instanceof BaseDecimal) {
+	} else if(input instanceof AbstractDecimal) {
 		return input;
 	} else {
 		throw new Error('Can not convert to decimal, got data of type `' + typeof input + `'`);

@@ -1,4 +1,4 @@
-import { BaseDecimal } from './decimal-base';
+import { AbstractDecimal } from './abstract-decimal';
 import { DecimalSPI } from './decimal-spi';
 import { SPI } from './ops/symbols';
 
@@ -8,7 +8,7 @@ import { convertString } from './ops/convertString';
 /**
  * Decimal implementation with limited precision.
  */
-export class Decimal extends BaseDecimal<number> {
+export class Decimal extends AbstractDecimal<number> {
 	public static [SPI]: DecimalSPI<number, Decimal>;
 
 	constructor(coefficent: number, exponent: number) {

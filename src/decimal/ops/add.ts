@@ -1,4 +1,4 @@
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 import { MathContext } from '../../context';
@@ -12,7 +12,7 @@ import { rescaleCoefficientAndExponent } from './rescaling';
  * @param a
  * @param b
  */
-export function addOp<C, D extends BaseDecimal<C>>(
+export function addOp<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
 	a: D,
 	b: D,

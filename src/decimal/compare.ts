@@ -1,4 +1,4 @@
-import { BaseDecimal } from './decimal-base';
+import { AbstractDecimal } from './abstract-decimal';
 import { validateCompatible } from './validateCompatible';
 import { SPI } from './ops/symbols';
 import { compareOp } from './ops/compare';
@@ -10,7 +10,7 @@ import { compareOp } from './ops/compare';
  * @param a
  * @param b
  */
-export function compare<D extends BaseDecimal<any>>(a: D, b: D): -1 | 0 | 1 {
+export function compare<D extends AbstractDecimal<any>>(a: D, b: D): -1 | 0 | 1 {
 	validateCompatible(a, b);
 	return compareOp(a[SPI], a, b);
 }
@@ -21,7 +21,7 @@ export function compare<D extends BaseDecimal<any>>(a: D, b: D): -1 | 0 | 1 {
  * @param a
  * @param b
  */
-export function isEqual<D extends BaseDecimal<any>>(a: D, b: D): boolean {
+export function isEqual<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
 	return compare(a, b) === 0;
 }
 
@@ -31,7 +31,7 @@ export function isEqual<D extends BaseDecimal<any>>(a: D, b: D): boolean {
  * @param a
  * @param b
  */
-export function isLessThan<D extends BaseDecimal<any>>(a: D, b: D): boolean {
+export function isLessThan<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
 	return compare(a, b) < 0;
 }
 
@@ -41,7 +41,7 @@ export function isLessThan<D extends BaseDecimal<any>>(a: D, b: D): boolean {
  * @param a
  * @param b
  */
-export function isLessThanOrEqual<D extends BaseDecimal<any>>(a: D, b: D): boolean {
+export function isLessThanOrEqual<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
 	return compare(a, b) <= 0;
 }
 
@@ -51,7 +51,7 @@ export function isLessThanOrEqual<D extends BaseDecimal<any>>(a: D, b: D): boole
  * @param a
  * @param b
  */
-export function isGreaterThan<D extends BaseDecimal<any>>(a: D, b: D): boolean {
+export function isGreaterThan<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
 	return compare(a, b) > 0;
 }
 
@@ -61,6 +61,6 @@ export function isGreaterThan<D extends BaseDecimal<any>>(a: D, b: D): boolean {
  * @param a
  * @param b
  */
-export function isGreaterThanOrEqual<D extends BaseDecimal<any>>(a: D, b: D): boolean {
+export function isGreaterThanOrEqual<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
 	return compare(a, b) >= 0;
 }

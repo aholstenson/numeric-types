@@ -1,4 +1,4 @@
-import { BaseDecimal } from '../decimal-base';
+import { AbstractDecimal } from '../abstract-decimal';
 import { DecimalSPI } from '../decimal-spi';
 
 import { RoundingMode } from '../../rounding-mode';
@@ -6,7 +6,7 @@ import { RoundingMode } from '../../rounding-mode';
 /**
  * Perform rounding on a coefficient and remainder.
  */
-export function round<C, D extends BaseDecimal<C>>(
+export function round<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
 	mode: RoundingMode,
 	coefficient: C,

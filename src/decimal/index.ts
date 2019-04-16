@@ -1,5 +1,6 @@
 
 // Decimal types
+export * from './abstract-decimal';
 export * from './decimal-normal';
 
 // Basic operations

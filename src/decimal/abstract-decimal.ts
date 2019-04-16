@@ -5,8 +5,8 @@ import { DecimalSPI } from './decimal-spi';
 import { toString } from './toString';
 
 /**
- * Base class for decimal values. Stores numbers in two parts, a coefficent and
- * a exponent in base 10.
+ * Base class for decimal values. Stores numbers in two parts, a coefficient
+ * and an exponent in base 10.
  *
  * The value of a decimal is calculated with:
  *
@@ -17,7 +17,7 @@ import { toString } from './toString';
  * BaseDecimal is designed so that the exponent is always a `number` and
  * `coefficient` is a dense value that subclasses define.
  */
-export class BaseDecimal<C> {
+export abstract class AbstractDecimal<C> {
 	public readonly [EXPONENT]: number;
 	public readonly [COEFFICIENT]: C;
 
