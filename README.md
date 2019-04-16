@@ -38,7 +38,7 @@ imported. This design is to allow the library to take advantage of tree-shaking.
 
   Create an instance of the numeric type from a regular JavaScript number.
 
-* `static NumericType.fromString(value: string): NumericType`
+* `static NumericType.parse(value: string): NumericType`
 
   Create an instance of the numeric type from a string.
 
@@ -82,7 +82,7 @@ implemented on top of `number` available:
 import { Decimal, multiply } from 'numeric-types/decimal';
 
 const a = Decimal.fromNumber(0.1);
-const b = Decimal.fromString(12);
+const b = Decimal.parse('12');
 
 const ab = multiply(a, b);
 console.log(ab.toString());
