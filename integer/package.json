@@ -1,5 +1,6 @@
 {
   "main": "../dist/cjs/integer/index.js",
   "module": "../dist/esm/integer/index.js",
-  "types": "../dist/types/integer/index.d.ts"
+  "types": "../dist/types/integer/index.d.ts",
+  "sideEffects": false
 }
