@@ -74,9 +74,10 @@ const contextWithPrecision = MathContext.ofPrecision(10, RoundingMode.Ceiling);
 
 ## Type: Decimal
 
-`Decimal` is an implementation of a numeric type that avoids the rounding
-errors common with floating point numbers. There is currently a version
-implemented on top of `number` available:
+Decimal is an implementation of a numeric type that avoids the rounding
+errors common with floating point numbers. There are two versions, `Decimal`
+and `BigDecimal` where `Decimal` is limited to safely handling 15 digits and
+`BigDecimal` can handle up to `Number.MAX_SAFE_INTEGER` digits:
 
 ```javascript
 import { Decimal, multiply } from 'numeric-types/decimal';
@@ -166,3 +167,82 @@ const { operationHere, anotherOperation } = require('numeric-types/decimal');
   Divide a decimal number `b` from the number `a`. A context is required to
   determine the scale and how to round things.
 
+## Type: Integer
+
+Integer is an implementation of a whole number. There are currently two versions
+available, `Integer` which is limited to the range of `number` and `BigInteger`
+which is can represent larger numbers.
+
+```javascript
+import { Integer, multiply } from 'numeric-types/integer';
+
+const a = Integer.fromNumber(20);
+const b = Integer.parse('40');
+
+const ab = multiply(a, b);
+console.log(ab.toString());
+```
+
+Types are available for TypeScript:
+
+```typescript
+import { AbstractInteger, Integer } from 'numeric-types/integer';
+
+const integer: AbstractInteger<any> = Integer.fromNumber(1);
+```
+
+### Operations
+
+These operations are available from `numeric-types/integer`. Import them
+separately like:
+
+```javascript
+import { operationHere, anotherOperation } from 'numeric-types/integer';
+
+const { operationHere, anotherOperation } = require('numeric-types/integer');
+```
+
+* `compare(a: IntegerType, b: IntegerType): -1 | 0 | 1`
+
+  Compare two integers. This method will return `0` if the numbers are
+  the same, `-1` if `a` is less than `b` and `1` if `a` is greater than `b`.
+
+* `isEqual(a: IntegerType, b: IntegerType): boolean`
+
+  Get if two integers are equal.
+
+* `isLessThan(a: IntegerType, b: IntegerType): boolean`
+
+  Get if the integer `a` is less than the number `b`.
+
+* `isLessThanOrEqual(a: IntegerType, b: IntegerType): boolean`
+
+  Get if the integer `a` is less than or equal to the number `b`.
+
+* `isGreaterThan(a: IntegerType, b: IntegerType): boolean`
+
+  Get if the integer `a` is greater than the number `b`.
+
+* `isGreaterThanOrEqual(a: IntegerType, b: IntegerType): boolean`
+
+  Get if the integer `a` is greater than or equal to the number `b`.
+
+* `toString(a: IntegerType): string`
+
+  Turn a integers into its string representation.
+
+* `add(a: IntegerType, b: IntegerType): IntegerType`
+
+  Add two integers together.
+
+* `subtract(a: IntegerType, b: IntegerType): IntegerType`
+
+  Subtract `b` from `a`
+
+* `multiply(a: IntegerType, b: IntegerType): IntegerType`
+
+  Multiply two integers together.
+
+* `divide(a: IntegerType, b: IntegerType): IntegerType`
+
+  Divide `a` by the divisor `b`.
