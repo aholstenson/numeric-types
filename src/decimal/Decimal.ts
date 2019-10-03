@@ -1,3 +1,5 @@
+import { MathError } from '../MathError';
+
 import { AbstractDecimal } from './AbstractDecimal';
 import { DecimalSPI } from './DecimalSPI';
 import { SPI } from './ops/symbols';
@@ -28,7 +30,7 @@ export class Decimal extends AbstractDecimal<number> {
 
 function checkSafe(a: number) {
 	if(! Number.isSafeInteger(a)) {
-		throw new Error('Coefficient is not a safe integer, got ' + a);
+		throw new MathError('Coefficient is not a safe integer, got ' + a);
 	}
 }
 

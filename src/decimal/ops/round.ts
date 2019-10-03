@@ -1,3 +1,5 @@
+import { MathError } from '../../MathError';
+
 import { AbstractDecimal } from '../AbstractDecimal';
 import { DecimalSPI } from '../DecimalSPI';
 
@@ -25,7 +27,7 @@ export function round<C, D extends AbstractDecimal<C>>(
 	let increment;
 	switch(mode) {
 		case RoundingMode.Unnecessary:
-			throw new Error('Rounding necessary');
+			throw new MathError('Rounding necessary');
 		case RoundingMode.Down:
 			/*
 			 * Round towards zero, so negative values need to be incremented.
