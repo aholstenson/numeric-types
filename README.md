@@ -19,11 +19,11 @@ This is currently an early release.
 * Rounding modes: up, down, half down, half even, half up, floor and ceiling
 * Decimal number representation
   * `Decimal` on top of `number` with limited precision of 15 digits
-  * __Planned__: `BigDecimal` for more precise numbers, with up to `Number.MAX_SAFE_INTEGER` digits
+  * `BigDecimal` for more precise numbers, with up to `Number.MAX_SAFE_INTEGER` digits
   * Basic math operations: add, subtract, multiply, divide
 * Integer representation
-  * __Planned__: `Integer` for integers between `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`
-  * __Planned__: `BigInteger` for large integers
+  * `Integer` for integers between `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`
+  * `BigInteger` for large integers
 
 ## API
 
