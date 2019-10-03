@@ -1,10 +1,10 @@
-import { AbstractDecimal } from '../abstract-decimal';
-import { DecimalSPI } from '../decimal-spi';
+import { AbstractDecimal } from '../AbstractDecimal';
+import { DecimalSPI } from '../DecimalSPI';
 
 import { EXPONENT, COEFFICIENT } from './symbols';
 
-import { rescaleCoefficient } from './rescaling';
-import { RoundingMode } from '../../rounding-mode';
+import { rescaleCoefficient } from './rescalingOp';
+import { RoundingMode } from '../../RoundingMode';
 
 /**
  *

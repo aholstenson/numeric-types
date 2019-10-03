@@ -1,4 +1,4 @@
-import { AbstractDecimal } from './abstract-decimal';
+import { AbstractDecimal } from './AbstractDecimal';
 
 /**
  * Service Provider Interface for supporting a decimal implementation. This

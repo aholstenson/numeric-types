@@ -1,8 +1,8 @@
-import { AbstractDecimal } from './abstract-decimal';
+import { AbstractDecimal } from './AbstractDecimal';
 import { SPI } from './ops/symbols';
 
-import { rescaleOp } from './ops/rescaling';
-import { RoundingMode } from '../rounding-mode';
+import { rescaleOp } from './ops/rescalingOp';
+import { RoundingMode } from '../RoundingMode';
 
 /**
  * Round the given decimal number, optionally specifying the rounding mode to

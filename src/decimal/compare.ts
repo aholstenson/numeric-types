@@ -1,7 +1,7 @@
-import { AbstractDecimal } from './abstract-decimal';
+import { AbstractDecimal } from './AbstractDecimal';
 import { validateCompatible } from './validateCompatible';
 import { SPI } from './ops/symbols';
-import { compareOp } from './ops/compare';
+import { compareOp } from './ops/compareOp';
 
 /**
  * Compare two decimal numbers. Returns `0` if the numbers are equal, `-1`

@@ -1,8 +1,8 @@
-import { AbstractDecimal } from './abstract-decimal';
+import { AbstractDecimal } from './AbstractDecimal';
 import { SPI } from './ops/symbols';
 
-import { MathContext } from '../context';
-import { rescaleOp } from './ops/rescaling';
+import { MathContext } from '../MathContext';
+import { rescaleOp } from './ops/rescalingOp';
 
 /**
  * Scale the given decimal number using the rules outlined by the context.

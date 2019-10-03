@@ -1,7 +1,7 @@
 
 // Decimal types
-export * from './abstract-decimal';
-export * from './decimal-normal';
+export * from './AbstractDecimal';
+export * from './Decimal';
 
 // Basic operations
 export * from './compare';

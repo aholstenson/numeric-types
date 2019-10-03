@@ -1,9 +1,9 @@
-import { AbstractDecimal } from './abstract-decimal';
+import { AbstractDecimal } from './AbstractDecimal';
 import { validateCompatible } from './validateCompatible';
 import { SPI } from './ops/symbols';
 
-import { MathContext } from '../context';
-import { divideOp } from './ops/divide';
+import { MathContext } from '../MathContext';
+import { divideOp } from './ops/divideOp';
 
 /**
  * Divide a number with another one.

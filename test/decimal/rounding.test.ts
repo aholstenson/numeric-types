@@ -1,6 +1,6 @@
-import { Decimal } from '../../src/decimal/decimal-normal';
-import { RoundingMode } from '../../src/rounding-mode';
-import { round } from '../../src/decimal/ops/rounding';
+import { Decimal } from '../../src/decimal/Decimal';
+import { RoundingMode } from '../../src/RoundingMode';
+import { round } from '../../src/decimal/ops/round';
 import { SPI } from '../../src/decimal/ops/symbols';
 
 function doRound(mode: RoundingMode, c: number, q: number): number {

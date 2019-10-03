@@ -1,5 +1,5 @@
-import { Decimal } from '../../src/decimal/decimal-normal';
-import { RoundingMode } from '../../src/rounding-mode';
+import { Decimal } from '../../src/decimal/Decimal';
+import { RoundingMode } from '../../src/RoundingMode';
 
 import { add } from '../../src/decimal/add';
 import { subtract } from '../../src/decimal/subtract';

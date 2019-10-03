@@ -1,5 +1,5 @@
 import { SPI, VALUE } from './ops/symbols';
-import { IntegerSPI } from './integer-spi';
+import { IntegerSPI } from './IntegerSPI';
 
 /**
  * Base class for integer values.

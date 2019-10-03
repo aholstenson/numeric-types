@@ -1,11 +1,11 @@
-import { AbstractDecimal } from '../abstract-decimal';
-import { DecimalSPI } from '../decimal-spi';
+import { AbstractDecimal } from '../AbstractDecimal';
+import { DecimalSPI } from '../DecimalSPI';
 
 import { EXPONENT, COEFFICIENT } from './symbols';
-import { MathContext, hasScaleOrPrecision } from '../../context';
+import { MathContext, hasScaleOrPrecision } from '../../MathContext';
 
-import { RoundingMode } from '../../rounding-mode';
-import { round } from './rounding';
+import { RoundingMode } from '../../RoundingMode';
+import { round } from './round';
 
 /**
  * Rescale the given number to the scale specified by the given math context.

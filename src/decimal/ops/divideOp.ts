@@ -1,11 +1,11 @@
-import { AbstractDecimal } from '../abstract-decimal';
-import { DecimalSPI } from '../decimal-spi';
+import { AbstractDecimal } from '../AbstractDecimal';
+import { DecimalSPI } from '../DecimalSPI';
 
 import { EXPONENT, COEFFICIENT } from './symbols';
-import { MathContext } from '../../context';
+import { MathContext } from '../../MathContext';
 
-import { round } from './rounding';
-import { calculateExponent } from './rescaling';
+import { round } from './round';
+import { calculateExponent } from './rescalingOp';
 
 /**
  * Perform a reduction of the given decimal value.

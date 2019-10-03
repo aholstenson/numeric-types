@@ -1,9 +1,9 @@
-import { AbstractDecimal } from './abstract-decimal';
+import { AbstractDecimal } from './AbstractDecimal';
 import { validateCompatible } from './validateCompatible';
 import { SPI } from './ops/symbols';
 
-import { addOp } from './ops/add';
-import { MathContext } from '../context';
+import { addOp } from './ops/addOp';
+import { MathContext } from '../MathContext';
 
 /**
  * Add two decimal numbers together.

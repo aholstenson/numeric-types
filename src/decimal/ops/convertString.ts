@@ -1,5 +1,5 @@
-import { AbstractDecimal } from '../abstract-decimal';
-import { DecimalSPI } from '../decimal-spi';
+import { AbstractDecimal } from '../AbstractDecimal';
+import { DecimalSPI } from '../DecimalSPI';
 
 const PATTERN = /^([-\+]?\d+)(?:\.(\d*))?(?:e([-\+]?\d+))?$/;
 

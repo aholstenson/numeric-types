@@ -1,6 +1,6 @@
 import { EXPONENT, COEFFICIENT } from './symbols';
-import { AbstractDecimal } from '../abstract-decimal';
-import { DecimalSPI } from '../decimal-spi';
+import { AbstractDecimal } from '../AbstractDecimal';
+import { DecimalSPI } from '../DecimalSPI';
 
 /**
  * Perform a reduction of the given decimal value.

@@ -1,4 +1,4 @@
-import { AbstractInteger } from './abstract-integer';
+import { AbstractInteger } from './AbstractInteger';
 
 /**
  * Service Provider Interface for supporting an integer implementation.

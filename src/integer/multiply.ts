@@ -1,4 +1,4 @@
-import { AbstractInteger } from './abstract-integer';
+import { AbstractInteger } from './AbstractInteger';
 import { VALUE, SPI } from './ops/symbols';
 
 /**

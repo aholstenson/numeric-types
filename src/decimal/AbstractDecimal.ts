@@ -1,6 +1,6 @@
 import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols';
 
-import { DecimalSPI } from './decimal-spi';
+import { DecimalSPI } from './DecimalSPI';
 
 import { toString } from './toString';
 

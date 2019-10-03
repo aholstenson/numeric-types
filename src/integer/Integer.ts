@@ -1,7 +1,7 @@
-import { AbstractInteger } from './abstract-integer';
+import { AbstractInteger } from './AbstractInteger';
 import { SPI } from './ops/symbols';
-import { IntegerSPI } from './integer-spi';
-import { MathError } from '../math-error';
+import { IntegerSPI } from './IntegerSPI';
+import { MathError } from '../MathError';
 
 /**
  * Integer implementation for use with numbers within the range of

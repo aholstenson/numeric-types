@@ -1,4 +1,4 @@
-import { AbstractDecimal } from './abstract-decimal';
+import { AbstractDecimal } from './AbstractDecimal';
 
 /**
  * Validate that the two supplied decimal instances are compatible.

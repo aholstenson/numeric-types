@@ -1,7 +1,7 @@
-import { AbstractDecimal } from '../abstract-decimal';
-import { DecimalSPI } from '../decimal-spi';
+import { AbstractDecimal } from '../AbstractDecimal';
+import { DecimalSPI } from '../DecimalSPI';
 
-import { RoundingMode } from '../../rounding-mode';
+import { RoundingMode } from '../../RoundingMode';
 
 /**
  * Perform rounding on a coefficient and remainder.

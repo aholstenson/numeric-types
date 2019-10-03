@@ -1,6 +1,6 @@
 import { EXPONENT, COEFFICIENT } from './symbols';
-import { AbstractDecimal } from '../abstract-decimal';
-import { DecimalSPI } from '../decimal-spi';
+import { AbstractDecimal } from '../AbstractDecimal';
+import { DecimalSPI } from '../DecimalSPI';
 
 /**
  * Operation that converts a decimal into a base-10 string.

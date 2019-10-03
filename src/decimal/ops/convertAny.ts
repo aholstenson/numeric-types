@@ -1,5 +1,5 @@
-import { AbstractDecimal } from '../abstract-decimal';
-import { DecimalSPI } from '../decimal-spi';
+import { AbstractDecimal } from '../AbstractDecimal';
+import { DecimalSPI } from '../DecimalSPI';
 
 import { convertNumber } from './convertNumber';
 import { convertString } from './convertString';

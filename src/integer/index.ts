@@ -1,5 +1,5 @@
-export * from './abstract-integer';
-export * from './normal';
+export * from './AbstractInteger';
+export * from './Integer';
 
 export * from './add';
 export * from './subtract';
