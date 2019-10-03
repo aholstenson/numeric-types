@@ -2,6 +2,7 @@
 // Decimal types
 export * from './AbstractDecimal';
 export * from './Decimal';
+export * from './BigDecimal';
 
 // Basic operations
 export * from './compare';
