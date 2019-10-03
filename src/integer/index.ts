@@ -1,5 +1,6 @@
 export * from './AbstractInteger';
 export * from './Integer';
+export * from './BigInteger';
 
 export * from './add';
 export * from './subtract';
