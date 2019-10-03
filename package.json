@@ -4,6 +4,7 @@
   "description": "Numeric types such as precise decimals",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch",
     "ci": "npm run coverage && npm run lint",
     "coverage": "jest --coverage",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
@@ -13,23 +14,29 @@
   },
   "license": "MIT",
   "repository": "aholstenson/numeric-types",
-  "keywords": [],
+  "keywords": [
+    "number",
+    "decimal",
+    "integer"
+  ],
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/types/index.d.ts",
   "engines": {
     "node": ">=8.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ts-custom-error": "^3.1.1"
+  },
   "devDependencies": {
-    "@types/jest": "^24.0.15",
-    "@types/node": "^8.10.49",
-    "coveralls": "^3.0.4",
-    "jest": "^24.8.0",
-    "jest-config": "^24.8.0",
-    "rimraf": "^2.6.3",
-    "ts-jest": "^24.0.2",
-    "tslint": "^5.17.0",
-    "typescript": "^3.5.2"
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.9",
+    "coveralls": "^3.0.6",
+    "jest": "^24.9.0",
+    "jest-config": "^24.9.0",
+    "rimraf": "^3.0.0",
+    "ts-jest": "^24.1.0",
+    "tslint": "^5.20.0",
+    "typescript": "^3.6.3"
   }
 }
