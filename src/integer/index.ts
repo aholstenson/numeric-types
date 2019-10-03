@@ -15,3 +15,4 @@ export * from './signedRightShift';
 export * from './bitwiseAnd';
 export * from './bitwiseOr';
 export * from './compare';
+export * from './toString';
