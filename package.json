@@ -31,7 +31,7 @@
     "ts-custom-error": "^3.1.1"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
+    "@types/jest": "^26.0.15",
     "@types/node": "^12.7.9",
     "coveralls": "^3.0.6",
     "jest": "^24.9.0",
