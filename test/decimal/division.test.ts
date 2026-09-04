@@ -166,9 +166,24 @@ describe('Decimal', function() {
 						expect(r.toString()).toEqual('-0.143');
 					});
 
-					it('1 / 1 to precision 3 HalfUp = 1.00', function() {
+					it('1 / 1 to precision 3 HalfUp = 1', function() {
 						const r = divide(parse('1'), parse('1'), MathContext.ofPrecision(3, RoundingMode.HalfUp));
-						expect(r.toString()).toEqual('1.00');
+						expect(r.toString()).toEqual('1');
+					});
+
+					it('1 / 8 to precision 3 HalfUp = 0.125', function() {
+						const r = divide(parse('1'), parse('8'), MathContext.ofPrecision(3, RoundingMode.HalfUp));
+						expect(r.toString()).toEqual('0.125');
+					});
+
+					it('1 / 4 to precision 3 HalfUp = 0.25', function() {
+						const r = divide(parse('1'), parse('4'), MathContext.ofPrecision(3, RoundingMode.HalfUp));
+						expect(r.toString()).toEqual('0.25');
+					});
+
+					it('1000 / 1 to precision 2 HalfUp = 1000', function() {
+						const r = divide(parse('1000'), parse('1'), MathContext.ofPrecision(2, RoundingMode.HalfUp));
+						expect(r.toString()).toEqual('1000');
 					});
 				});
 			});

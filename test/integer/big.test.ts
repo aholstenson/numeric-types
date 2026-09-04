@@ -50,7 +50,7 @@ describe('Integer', function() {
 		});
 
 		describe('exponentiate', function() {
-			it('4 ** 2 = 2', function() {
+			it('4 ** 2 = 16', function() {
 				const a = BigInteger.fromNumber(4);
 				const b = BigInteger.fromNumber(2);
 				const r = exponentiate(a, b);

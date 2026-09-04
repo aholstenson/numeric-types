@@ -31,14 +31,14 @@ describe('Decimal', function() {
 				expect(r.toString()).toEqual('2.2');
 			});
 
-			it('1e-2 + 1e-4 = 1.0101', function() {
+			it('1e-2 + 1e-4 = 0.0101', function() {
 				const a = BigDecimal.parse('1e-2');
 				const b = BigDecimal.parse('1e-4');
 				const r = add(a, b);
 				expect(r.toString()).toEqual('0.0101');
 			});
 
-			it('1e2 + 1e4 = 10101', function() {
+			it('1e2 + 1e4 = 10100', function() {
 				const a = BigDecimal.parse('1e2');
 				const b = BigDecimal.parse('1e4');
 				const r = add(a, b);

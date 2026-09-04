@@ -130,10 +130,13 @@ export function calculateExponent<C, D extends AbstractDecimal<any>>(
 		}
 
 		/*
-		 * Keep the requested number of digits by dropping the digits that are
-		 * in excess of it.
+		 * Precision is an upper limit, so drop the digits that are in excess
+		 * of it. A value that already has fewer digits is left alone, as
+		 * padding it with zeroes would claim a precision that the value does
+		 * not have.
 		 */
-		return exponent + spi.digits(coefficient) - context.precision;
+		const excess = spi.digits(coefficient) - context.precision;
+		return excess > 0 ? exponent + excess : exponent;
 	} else if(typeof defaultExponent !== 'undefined') {
 		return defaultExponent;
 	} else {

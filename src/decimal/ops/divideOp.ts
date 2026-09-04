@@ -37,14 +37,22 @@ export function divideOp<C, D extends AbstractDecimal<C>>(
 	}
 
 	const exponent = calculateDivisionExponent(spi, a, b, context);
-	const coefficient = divideAtExponent(spi, a, b, exponent, context.roundingMode);
+	const result = divideAtExponent(spi, a, b, exponent, context.roundingMode);
 
 	if(! hasScaleOrPrecision(context)) {
 		// The default exponent leaves trailing zeroes that carry no meaning.
-		return reduce(spi, coefficient, exponent);
+		return reduce(spi, result.coefficient, exponent);
 	}
 
-	return applyPrecision(spi, coefficient, exponent, context);
+	if(typeof context.scale === 'undefined' && result.exact) {
+		/*
+		 * Precision is an upper limit. An exact result needs no placeholder
+		 * digits to reach it.
+		 */
+		return reduce(spi, result.coefficient, exponent);
+	}
+
+	return applyPrecision(spi, result.coefficient, exponent, context);
 }
 
 /**
@@ -82,12 +90,20 @@ function calculateDivisionExponent<C, D extends AbstractDecimal<C>>(
 	 * result of this division is discarded, so the value is never rounded
 	 * twice.
 	 */
-	const trial = divideAtExponent(spi, a, b, estimate, RoundingMode.Down);
+	const trial = divideAtExponent(spi, a, b, estimate, RoundingMode.Down).coefficient;
 	if(spi.isZero(trial)) {
 		return estimate;
 	}
 
 	return estimate + spi.digits(trial) - context.precision;
+}
+
+/**
+ * The coefficient of a division, and whether the division came out exact.
+ */
+interface DivisionResult<C> {
+	coefficient: C;
+	exact: boolean;
 }
 
 /**
@@ -103,7 +119,7 @@ function divideAtExponent<C, D extends AbstractDecimal<C>>(
 	b: D,
 	exponent: number,
 	roundingMode: RoundingMode
-): C {
+): DivisionResult<C> {
 	/*
 	 * `a / b` is `(ca / cb) * 10^(ea - eb)`. To land on the requested
 	 * exponent the difference has to be moved into the fraction, either by
@@ -123,5 +139,8 @@ function divideAtExponent<C, D extends AbstractDecimal<C>>(
 	const quotient = spi.divide(numerator, denominator);
 	const remainder = spi.remainder(numerator, denominator);
 
-	return round(spi, roundingMode, quotient, remainder, denominator);
+	return {
+		coefficient: round(spi, roundingMode, quotient, remainder, denominator),
+		exact: spi.isZero(remainder)
+	};
 }
