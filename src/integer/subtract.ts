@@ -1,5 +1,6 @@
 import { AbstractInteger } from './AbstractInteger.js';
 import { VALUE, SPI } from './ops/symbols.js';
+import { validateCompatible } from './validateCompatible.js';
 
 /**
  * Subtract the second integer from the first integer.
@@ -8,6 +9,8 @@ import { VALUE, SPI } from './ops/symbols.js';
  * @param b
  */
 export function subtract<I extends AbstractInteger<any>>(a: I, b: I): I {
+	validateCompatible(a, b);
+
 	const spi = a[SPI];
 
 	const aValue = a[VALUE];

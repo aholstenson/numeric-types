@@ -1,3 +1,5 @@
+import { MathError } from '../../MathError.js';
+
 import { AbstractDecimal } from '../AbstractDecimal.js';
 import type { DecimalSPI } from '../DecimalSPI.js';
 
@@ -8,12 +10,12 @@ const PATTERN = /^([-+]?\d+)(?:\.(\d*))?(?:e([-+]?\d+))?$/;
  */
 export function convertString<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, input: string): D {
 	if(typeof input !== 'string') {
-		throw new Error('Can only be used with a string, received object with type ' + typeof input);
+		throw new MathError('Can only be used with a string, received object with type ' + typeof input);
 	}
 
 	const data = PATTERN.exec(input.trim());
 	if(! data) {
-		throw new Error('Invalid string, can not be converted to decimal, input was ' + input);
+		throw new MathError('Invalid string, can not be converted to decimal, input was ' + input);
 	}
 
 	const integer = data[1];

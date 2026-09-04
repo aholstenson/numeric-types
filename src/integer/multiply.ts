@@ -1,5 +1,6 @@
 import { AbstractInteger } from './AbstractInteger.js';
 import { VALUE, SPI } from './ops/symbols.js';
+import { validateCompatible } from './validateCompatible.js';
 
 /**
  * Multiply two integers together.
@@ -8,6 +9,8 @@ import { VALUE, SPI } from './ops/symbols.js';
  * @param b
  */
 export function multiply<I extends AbstractInteger<any>>(a: I, b: I): I {
+	validateCompatible(a, b);
+
 	const spi = a[SPI];
 
 	const aValue = a[VALUE];

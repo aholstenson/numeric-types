@@ -1,6 +1,8 @@
 import { AbstractInteger } from './AbstractInteger.js';
 import { SPI } from './ops/symbols.js';
 import type { IntegerSPI } from './IntegerSPI.js';
+import { MathError } from '../MathError.js';
+import { validateIntegerString } from './ops/parseString.js';
 
 /**
  * Integer implementation that supports large numbers. Values are stored as
@@ -10,12 +12,23 @@ import type { IntegerSPI } from './IntegerSPI.js';
 export class BigInteger extends AbstractInteger<bigint> {
 	public static [SPI]: IntegerSPI<bigint, BigInteger>;
 
+	/**
+	 * Create an integer from a number. The number must already be a whole
+	 * number.
+	 */
 	public static fromNumber(a: number): BigInteger {
+		if(! Number.isInteger(a)) {
+			throw new MathError('Number is not a whole number, received: ' + a);
+		}
+
 		return BigInteger[SPI].newInstance(BigInt(a));
 	}
 
+	/**
+	 * Create an integer from a string holding its base-10 representation.
+	 */
 	public static parse(input: string): BigInteger {
-		return BigInteger[SPI].newInstance(BigInt(input));
+		return BigInteger[SPI].newInstance(BigInt(validateIntegerString(input)));
 	}
 }
 
@@ -42,6 +55,14 @@ BigInteger[SPI] = {
 
 	remainder(a, b) {
 		return a % b;
+	},
+
+	isZero(a) {
+		return a === 0n;
+	},
+
+	isNegative(a) {
+		return a < 0n;
 	},
 
 	exponentiate(a, b) {

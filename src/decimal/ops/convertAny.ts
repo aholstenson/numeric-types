@@ -1,3 +1,5 @@
+import { MathError } from '../../MathError.js';
+
 import { AbstractDecimal } from '../AbstractDecimal.js';
 import type { DecimalSPI } from '../DecimalSPI.js';
 
@@ -15,6 +17,6 @@ export function convertAny<C, D extends AbstractDecimal<C>>(
 	} else if(input instanceof AbstractDecimal) {
 		return input;
 	} else {
-		throw new Error('Can not convert to decimal, got data of type `' + typeof input + '`');
+		throw new MathError('Can not convert to decimal, got data of type `' + typeof input + '`');
 	}
 }

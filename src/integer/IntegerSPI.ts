@@ -34,7 +34,8 @@ export interface IntegerSPI<V, I extends AbstractInteger<V>> {
 	multiply(a: V, b: V): V;
 
 	/**
-	 * Divide the first number with the second one.
+	 * Divide the first number with the second one, truncating the result
+	 * towards zero.
 	 *
 	 * @param a
 	 * @param b
@@ -43,12 +44,26 @@ export interface IntegerSPI<V, I extends AbstractInteger<V>> {
 
 	/**
 	 * Get the remainder of a division of the first number by the second one.
-	 * Equivalent to a % b.
+	 * Equivalent to a % b, so the remainder carries the sign of `a`.
 	 *
 	 * @param a
 	 * @param b
 	 */
 	remainder(a: V, b: V): V;
+
+	/**
+	 * Get if the given number is zero.
+	 *
+	 * @param a
+	 */
+	isZero(a: V): boolean;
+
+	/**
+	 * Get if the given number is negative.
+	 *
+	 * @param a
+	 */
+	isNegative(a: V): boolean;
 
 	/**
 	 * Exponentiate the first number with the second one.

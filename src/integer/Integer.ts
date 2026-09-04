@@ -2,6 +2,10 @@ import { AbstractInteger } from './AbstractInteger.js';
 import { SPI } from './ops/symbols.js';
 import type { IntegerSPI } from './IntegerSPI.js';
 import { MathError } from '../MathError.js';
+import { validateIntegerString } from './ops/parseString.js';
+
+const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
+const MIN_SAFE = BigInt(Number.MIN_SAFE_INTEGER);
 
 /**
  * Integer implementation for use with numbers within the range of
@@ -10,24 +14,39 @@ import { MathError } from '../MathError.js';
 export class Integer extends AbstractInteger<number> {
 	public static [SPI]: IntegerSPI<number, Integer>;
 
+	/**
+	 * Create an integer from a number. The number must already be a whole
+	 * number within the safe range, as rounding it here would hide a mistake
+	 * in the calling code.
+	 */
 	public static fromNumber(a: number): Integer {
 		return Integer[SPI].newInstance(a);
 	}
 
+	/**
+	 * Create an integer from a string holding its base-10 representation.
+	 */
 	public static parse(input: string): Integer {
-		const value = parseInt(input, 10);
-		return this.fromNumber(value);
+		/*
+		 * Parse via `bigint` so that a value outside the safe range is
+		 * reported instead of silently losing its last digits.
+		 */
+		const value = BigInt(validateIntegerString(input));
+		if(value > MAX_SAFE || value < MIN_SAFE) {
+			throw new MathError('Number can not be turned into a safe integer, received: ' + input);
+		}
+
+		return Integer[SPI].newInstance(Number(value));
 	}
 }
 
 Integer[SPI] = {
 	newInstance(a: number): Integer {
-		const floored = Math.floor(a);
-		if(! Number.isSafeInteger(floored)) {
+		if(! Number.isSafeInteger(a)) {
 			throw new MathError('Number can not be turned into a safe integer, received: ' + a);
 		}
 
-		return new Integer(floored);
+		return new Integer(a);
 	},
 
 	add(a: number, b: number): number {
@@ -43,11 +62,20 @@ Integer[SPI] = {
 	},
 
 	divide(a: number, b: number): number {
-		return a / b;
+		// Truncate towards zero, in the same way as `bigint` division does.
+		return Math.trunc(a / b);
 	},
 
 	remainder(a: number, b: number): number {
 		return a % b;
+	},
+
+	isZero(a: number): boolean {
+		return a === 0;
+	},
+
+	isNegative(a: number): boolean {
+		return a < 0;
 	},
 
 	exponentiate(a: number, b: number): number {
