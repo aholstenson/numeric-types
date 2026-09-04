@@ -2,13 +2,19 @@ import { AbstractDecimal } from '../AbstractDecimal.js';
 import type { DecimalSPI } from '../DecimalSPI.js';
 
 import { EXPONENT, COEFFICIENT } from './symbols.js';
-import { MathContext } from '../../MathContext.js';
+import { MathContext, hasScaleOrPrecision } from '../../MathContext.js';
+import { MathError } from '../../MathError.js';
+import { RoundingMode } from '../../RoundingMode.js';
 
 import { round } from './round.js';
-import { calculateExponent } from './rescalingOp.js';
+import { applyPrecision, reduce, validatePrecision } from './rescalingOp.js';
 
 /**
- * Perform a reduction of the given decimal value.
+ * Divide a decimal value by another one.
+ *
+ * The context decides how many digits the result keeps. Without a scale or a
+ * precision the result is calculated at the default exponent of the type and
+ * then reduced.
  */
 export function divideOp<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
@@ -16,31 +22,106 @@ export function divideOp<C, D extends AbstractDecimal<C>>(
 	b: D,
 	context: MathContext
 ): D {
-	let coefficient = a[COEFFICIENT];
-	let exponent = a[EXPONENT] - b[EXPONENT];
+	if(spi.isZero(b[COEFFICIENT])) {
+		throw new MathError('Division by zero');
+	}
 
-	const scaleExponent = calculateExponent(spi, coefficient, a[EXPONENT], context, spi.DEFAULT_EXPONENT);
-
-	if(exponent > scaleExponent) {
+	if(spi.isZero(a[COEFFICIENT])) {
 		/*
-		 * Expand the coefficient to match the scaled exponent.
+		 * Zero divided by any number is zero, but the result still has to
+		 * carry the scale that was asked for.
 		 */
-		coefficient = spi.multiply(coefficient, spi.exponentiate(spi.TEN, spi.wrap(exponent - scaleExponent)));
-		exponent = scaleExponent;
+		return typeof context.scale === 'undefined'
+			? spi.DECIMAL_ZERO
+			: spi.newInstance(spi.wrap(0), - context.scale);
 	}
 
-	coefficient = spi.divide(coefficient, b[COEFFICIENT]);
-	const remainder = spi.remainder(coefficient, b[COEFFICIENT]);
+	const exponent = calculateDivisionExponent(spi, a, b, context);
+	const coefficient = divideAtExponent(spi, a, b, exponent, context.roundingMode);
 
-	coefficient = round(spi, context.roundingMode, coefficient, remainder);
-
-	// Perform a reduction if using default exponent
-	if(typeof context.scale === 'undefined') {
-		while(! spi.isZero(coefficient) && spi.isMultipleOf(coefficient, spi.TEN)) {
-			coefficient = spi.divide(coefficient, spi.TEN);
-			exponent++;
-		}
+	if(! hasScaleOrPrecision(context)) {
+		// The default exponent leaves trailing zeroes that carry no meaning.
+		return reduce(spi, coefficient, exponent);
 	}
 
-	return spi.newInstance(coefficient, exponent);
+	return applyPrecision(spi, coefficient, exponent, context);
+}
+
+/**
+ * Find the exponent that the result of a division should use.
+ */
+function calculateDivisionExponent<C, D extends AbstractDecimal<C>>(
+	spi: DecimalSPI<C, D>,
+	a: D,
+	b: D,
+	context: MathContext
+): number {
+	if(typeof context.scale !== 'undefined') {
+		return - context.scale;
+	}
+
+	if(typeof context.precision === 'undefined') {
+		return spi.DEFAULT_EXPONENT;
+	}
+
+	validatePrecision(context.precision);
+
+	/*
+	 * A value sits between `10^(magnitude-1)` and `10^magnitude`, where the
+	 * magnitude is the exponent plus the digit count. The magnitude of a
+	 * quotient is the difference between the two magnitudes, or one more
+	 * than that.
+	 */
+	const magnitude = (a[EXPONENT] + spi.digits(a[COEFFICIENT]))
+		- (b[EXPONENT] + spi.digits(b[COEFFICIENT]));
+
+	const estimate = magnitude - context.precision;
+
+	/*
+	 * Divide once without rounding to measure the real digit count. The
+	 * result of this division is discarded, so the value is never rounded
+	 * twice.
+	 */
+	const trial = divideAtExponent(spi, a, b, estimate, RoundingMode.Down);
+	if(spi.isZero(trial)) {
+		return estimate;
+	}
+
+	return estimate + spi.digits(trial) - context.precision;
+}
+
+/**
+ * Divide `a` by `b` and return the coefficient of the result at the given
+ * exponent.
+ *
+ * The division is set up so that a single division and a single rounding
+ * produce the result.
+ */
+function divideAtExponent<C, D extends AbstractDecimal<C>>(
+	spi: DecimalSPI<C, D>,
+	a: D,
+	b: D,
+	exponent: number,
+	roundingMode: RoundingMode
+): C {
+	/*
+	 * `a / b` is `(ca / cb) * 10^(ea - eb)`. To land on the requested
+	 * exponent the difference has to be moved into the fraction, either by
+	 * growing the numerator or by growing the denominator.
+	 */
+	const shift = a[EXPONENT] - b[EXPONENT] - exponent;
+
+	let numerator = a[COEFFICIENT];
+	let denominator = b[COEFFICIENT];
+
+	if(shift > 0) {
+		numerator = spi.multiply(numerator, spi.exponentiate(spi.TEN, spi.wrap(shift)));
+	} else if(shift < 0) {
+		denominator = spi.multiply(denominator, spi.exponentiate(spi.TEN, spi.wrap(-shift)));
+	}
+
+	const quotient = spi.divide(numerator, denominator);
+	const remainder = spi.remainder(numerator, denominator);
+
+	return round(spi, roundingMode, quotient, remainder, denominator);
 }

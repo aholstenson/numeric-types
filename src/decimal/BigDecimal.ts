@@ -63,9 +63,9 @@ BigDecimal[SPI] = {
 		return BigInteger.parse(input);
 	},
 
-	firstDigit(a) {
-		// TODO: Faster algorithm for figuring out the first digit?
-		return parseInt(a.toString()[0], 10);
+	digits(a) {
+		const value = a.toString();
+		return value.charAt(0) === '-' ? value.length - 1 : value.length;
 	},
 
 	toString(a) {

@@ -28,10 +28,20 @@ export class Decimal extends AbstractDecimal<number> {
 	}
 }
 
-function checkSafe(a: number) {
+/**
+ * Check that a value is still exact, and return it.
+ *
+ * A `number` silently drops digits above `Number.MAX_SAFE_INTEGER`, and the
+ * dropped digits can turn into trailing zeroes that later steps remove. The
+ * check therefore runs on every result that can grow, and not only on the
+ * coefficient that reaches the constructor.
+ */
+function checkSafe(a: number): number {
 	if(! Number.isSafeInteger(a)) {
 		throw new MathError('Coefficient is not a safe integer, got ' + a);
 	}
+
+	return a;
 }
 
 Decimal[SPI] = {
@@ -69,10 +79,12 @@ Decimal[SPI] = {
 		return parseInt(input, 10);
 	},
 
-	firstDigit(a) {
-		a = Math.abs(a);
-		const digits = Math.max(Math.floor(Math.log10(a)), 0) + 1;
-		return Math.floor(a / Math.pow(10, digits - 1));
+	digits(a) {
+		/*
+		 * Safe integers never use e-notation in their string form, so the
+		 * length of the string is the digit count.
+		 */
+		return Math.abs(a).toString().length;
 	},
 
 	toString(a) {
@@ -84,19 +96,23 @@ Decimal[SPI] = {
 	},
 
 	add(a, b) {
-		return a + b;
+		return checkSafe(a + b);
 	},
 
 	subtract(a, b) {
-		return a - b;
+		return checkSafe(a - b);
 	},
 
 	multiply(a, b) {
-		return a * b;
+		return checkSafe(a * b);
 	},
 
 	divide(a, b) {
-		return Math.floor(a / b);
+		/*
+		 * Truncate towards zero, so that the quotient and the remainder from
+		 * `%` describe the same division.
+		 */
+		return Math.trunc(a / b);
 	},
 
 	remainder(a, b) {
@@ -104,7 +120,7 @@ Decimal[SPI] = {
 	},
 
 	exponentiate(a, b) {
-		return Math.pow(a, b);
+		return checkSafe(Math.pow(a, b));
 	},
 
 	absolute(a) {

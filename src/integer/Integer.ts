@@ -58,28 +58,39 @@ Integer[SPI] = {
 		return -a;
 	},
 
+	/*
+	 * The bitwise operators of JavaScript truncate their operands to 32 bits.
+	 * These operations cover the full range of the type, so they go through
+	 * `bigint` instead. `newInstance` rejects a result that no longer fits.
+	 */
 	bitwiseNot(a: number): number {
-		return ~a;
+		return Number(~BigInt(a));
 	},
 
 	leftShift(a: number, b: number): number {
-		return a << b;
+		return Number(BigInt(a) << BigInt(b));
 	},
 
 	signedRightShift(a: number, b: number): number {
-		return a >> b;
+		return Number(BigInt(a) >> BigInt(b));
 	},
 
 	bitwiseAnd(a: number, b: number): number {
-		return a & b;
+		return Number(BigInt(a) & BigInt(b));
 	},
 
 	bitwiseOr(a: number, b: number): number {
-		return a | b;
+		return Number(BigInt(a) | BigInt(b));
 	},
 
 	compare(a, b) {
-		return a < b ? -1 : (a === b ? 0 : -1);
+		if(a < b) {
+			return -1;
+		} else if(a > b) {
+			return 1;
+		}
+
+		return 0;
 	},
 
 	toString(a) {

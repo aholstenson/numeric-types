@@ -51,13 +51,12 @@ export interface DecimalSPI<C, D extends AbstractDecimal<C>> {
 	isNegative(a: C): boolean;
 
 	/**
-	 * Get the first digit of the number. 100 would return 1, 2300 would be 2
-	 * and so on.
+	 * Get the number of digits in the number, ignoring its sign. `100` returns
+	 * `3`, `-25` returns `2` and `0` returns `1`.
 	 *
 	 * @param a
-	 * @param position
 	 */
-	firstDigit(a: C): number;
+	digits(a: C): number;
 
 	/**
 	 * Compare two numbers. Returns `0` if the values are numerically equal,
@@ -115,7 +114,8 @@ export interface DecimalSPI<C, D extends AbstractDecimal<C>> {
 	multiply(a: C, b: C): C;
 
 	/**
-	 * Divide the first number with a divisor `b`.
+	 * Divide the first number with a divisor `b`, truncating the result
+	 * towards zero.
 	 *
 	 * @param a
 	 * @param b
@@ -123,7 +123,9 @@ export interface DecimalSPI<C, D extends AbstractDecimal<C>> {
 	divide(a: C, b: C): C;
 
 	/**
-	 * Get the remainder of a division between the two numbers.
+	 * Get the remainder of a division between the two numbers. The remainder
+	 * carries the sign of `a`, so that `divide` and `remainder` together
+	 * satisfy `divide(a, b) * b + remainder(a, b) === a`.
 	 *
 	 * @param a
 	 * @param b

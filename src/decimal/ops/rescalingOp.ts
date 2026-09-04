@@ -4,6 +4,7 @@ import type { DecimalSPI } from '../DecimalSPI.js';
 import { EXPONENT, COEFFICIENT } from './symbols.js';
 import { MathContext, hasScaleOrPrecision } from '../../MathContext.js';
 
+import { MathError } from '../../MathError.js';
 import { RoundingMode } from '../../RoundingMode.js';
 import { round } from './round.js';
 
@@ -33,23 +34,71 @@ export function rescaleCoefficientAndExponent<C, D extends AbstractDecimal<any>>
 		 * No context specified so perform a reduction until no more zeroes
 		 * can be removed.
 		 */
-		let scaledCoefficient = coefficient;
-		let scaledExponent = exponent;
-		while(! spi.isZero(scaledCoefficient) && spi.isMultipleOf(scaledCoefficient, spi.TEN)) {
-			scaledCoefficient = spi.divide(coefficient, spi.TEN);
-			scaledExponent++;
-		}
-		return spi.newInstance(scaledCoefficient, scaledExponent);
-	} else {
-		const scaledExponent = calculateExponent(spi, coefficient, exponent, context);
-		const scaledCoefficient = rescaleCoefficient(spi, coefficient, exponent, scaledExponent, context.roundingMode);
-		return spi.newInstance(scaledCoefficient, scaledExponent);
+		return reduce(spi, coefficient, exponent);
 	}
+
+	const scaledExponent = calculateExponent(spi, coefficient, exponent, context);
+	const scaledCoefficient = rescaleCoefficient(spi, coefficient, exponent, scaledExponent, context.roundingMode);
+
+	return applyPrecision(spi, scaledCoefficient, scaledExponent, context);
+}
+
+/**
+ * Remove trailing zeroes from a coefficient, raising the exponent for each
+ * zero that is removed. The value does not change.
+ */
+export function reduce<C, D extends AbstractDecimal<any>>(
+	spi: DecimalSPI<C, D>,
+	coefficient: C,
+	exponent: number
+): D {
+	// TODO: Potential optimization to reduce by several zeros at once
+
+	let reducedCoefficient = coefficient;
+	let reducedExponent = exponent;
+
+	while(! spi.isZero(reducedCoefficient) && spi.isMultipleOf(reducedCoefficient, spi.TEN)) {
+		reducedCoefficient = spi.divide(reducedCoefficient, spi.TEN);
+		reducedExponent++;
+	}
+
+	return spi.newInstance(reducedCoefficient, reducedExponent);
+}
+
+/**
+ * Drop a digit if rounding pushed the number over the requested precision.
+ *
+ * Rounding `9.99` to a precision of two digits first gives `10.0`, which has
+ * three digits. The extra digit is always a trailing zero, so removing it can
+ * not round the value a second time.
+ */
+export function applyPrecision<C, D extends AbstractDecimal<any>>(
+	spi: DecimalSPI<C, D>,
+	coefficient: C,
+	exponent: number,
+	context: MathContext
+): D {
+	if(typeof context.scale !== 'undefined' || typeof context.precision === 'undefined') {
+		return spi.newInstance(coefficient, exponent);
+	}
+
+	const extra = spi.digits(coefficient) - context.precision;
+	if(extra <= 0) {
+		return spi.newInstance(coefficient, exponent);
+	}
+
+	const raisedExponent = exponent + extra;
+	return spi.newInstance(
+		rescaleCoefficient(spi, coefficient, exponent, raisedExponent, context.roundingMode),
+		raisedExponent
+	);
 }
 
 /**
  * Calculate the exponent to use when applying a math context to a specific
  * number.
+ *
+ * A context that sets a scale takes priority over one that sets a precision.
  *
  * @param spi
  * @param coefficient
@@ -73,11 +122,31 @@ export function calculateExponent<C, D extends AbstractDecimal<any>>(
 		 */
 		return - context.scale;
 	} else if(typeof context.precision !== 'undefined') {
-		throw new Error('No support for precision');
+		validatePrecision(context.precision);
+
+		if(spi.isZero(coefficient)) {
+			// Zero has no significant digits to keep.
+			return exponent;
+		}
+
+		/*
+		 * Keep the requested number of digits by dropping the digits that are
+		 * in excess of it.
+		 */
+		return exponent + spi.digits(coefficient) - context.precision;
 	} else if(typeof defaultExponent !== 'undefined') {
 		return defaultExponent;
 	} else {
 		return exponent;
+	}
+}
+
+/**
+ * Check that a precision can be used, throwing a `MathError` if it can not.
+ */
+export function validatePrecision(precision: number) {
+	if(! Number.isInteger(precision) || precision < 1) {
+		throw new MathError('Precision must be a positive integer, got ' + precision);
 	}
 }
 
@@ -108,12 +177,12 @@ export function rescaleCoefficient<C, D extends AbstractDecimal<C>>(
 
 	const diff = Math.abs(newExponent - exponent);
 
-	const scale = spi.exponentiate(spi.TEN, spi.wrap(diff));
+	const scaleFactor = spi.exponentiate(spi.TEN, spi.wrap(diff));
 	if(newExponent > exponent) {
-		const scaledCoefficient = spi.divide(coefficient, scale);
-		const scaledRemainder = spi.remainder(coefficient, scale);
-		return round(spi, roundingMode, scaledCoefficient, scaledRemainder);
+		const scaledCoefficient = spi.divide(coefficient, scaleFactor);
+		const scaledRemainder = spi.remainder(coefficient, scaleFactor);
+		return round(spi, roundingMode, scaledCoefficient, scaledRemainder, scaleFactor);
 	} else {
-		return spi.multiply(coefficient, scale);
+		return spi.multiply(coefficient, scaleFactor);
 	}
 }

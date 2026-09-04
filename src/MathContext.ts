@@ -2,6 +2,11 @@ import { RoundingMode } from './RoundingMode.js';
 
 export class MathContext {
 	public readonly roundingMode: RoundingMode;
+
+	/**
+	 * Precision indicates the number of significant digits to keep. A context
+	 * that sets a scale ignores the precision.
+	 */
 	public readonly precision?: number;
 
 	/**
@@ -19,12 +24,19 @@ export class MathContext {
 		this.scale = scale;
 	}
 
+	/**
+	 * Create a context that keeps the given number of digits after the
+	 * decimal point.
+	 */
 	public static ofScale(scale: number, roundingMode: RoundingMode): MathContext {
-		return new MathContext(roundingMode, 0, scale);
+		return new MathContext(roundingMode, undefined, scale);
 	}
 
+	/**
+	 * Create a context that keeps the given number of significant digits.
+	 */
 	public static ofPrecision(precision: number, roundingMode: RoundingMode): MathContext {
-		return new MathContext(roundingMode, precision, 0);
+		return new MathContext(roundingMode, precision, undefined);
 	}
 }
 

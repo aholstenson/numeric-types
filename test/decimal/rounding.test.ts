@@ -3,9 +3,13 @@ import { RoundingMode } from '../../src/RoundingMode.js';
 import { round } from '../../src/decimal/ops/round.js';
 import { SPI } from '../../src/decimal/ops/symbols.js';
 
+/**
+ * Round the value `c / q`, supplying the truncated quotient and the remainder
+ * in the same way as the operations that call `round` do.
+ */
 function doRound(mode: RoundingMode, c: number, q: number): number {
 	const spi = Decimal[SPI];
-	return round(spi, mode, Math.floor(c / q), Math.floor(c % q));
+	return round(spi, mode, Math.trunc(c / q), c % q, q);
 }
 
 describe('Decimal', function() {

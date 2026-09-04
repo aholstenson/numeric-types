@@ -2,25 +2,19 @@ import { EXPONENT, COEFFICIENT } from './symbols.js';
 import { AbstractDecimal } from '../AbstractDecimal.js';
 import type { DecimalSPI } from '../DecimalSPI.js';
 
+import { reduce } from './rescalingOp.js';
+
 /**
- * Perform a reduction of the given decimal value.
+ * Perform a reduction of the given decimal value, removing trailing zeroes
+ * from its coefficient.
  */
 export function reduceOp<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, a: D): D {
+	const reduced = reduce(spi, a[COEFFICIENT], a[EXPONENT]);
 
-	let coefficient = a[COEFFICIENT];
-	let exponent = a[EXPONENT];
-
-	// TODO: Potential optimization to reduce by several zeros at once
-
-	while(! spi.isZero(coefficient) && spi.isMultipleOf(coefficient, spi.TEN)) {
-		coefficient = spi.divide(coefficient, spi.TEN);
-		exponent++;
-	}
-
-	if(spi.isZero(coefficient)) {
+	if(spi.isZero(reduced[COEFFICIENT])) {
 		// If the new result is zero - return the static value
 		return spi.DECIMAL_ZERO;
 	}
 
-	return spi.newInstance(coefficient, exponent);
+	return reduced;
 }
