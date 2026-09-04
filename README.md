@@ -18,7 +18,9 @@ load it. Node 22.12 and later can also load it with `require`.
 
 This is currently an early release.
 
-* Rounding modes: up, down, half down, half even, half up, floor and ceiling
+* Rounding modes: up, down, half down, half even, half up, floor, ceiling and
+  unnecessary
+* Scale and precision, applied through a `MathContext`
 * Decimal number representation
   * `Decimal` on top of `number` with limited precision of 15 digits
   * `BigDecimal` for more precise numbers, with up to `Number.MAX_SAFE_INTEGER` digits
@@ -26,6 +28,7 @@ This is currently an early release.
 * Integer representation
   * `Integer` for integers between `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`
   * `BigInteger` for large integers, on top of the built-in `bigint` type
+  * Math operations, and the bitwise operations over the full range of the type
 
 ## API
 
@@ -39,14 +42,39 @@ imported. This design is to allow the library to take advantage of tree-shaking.
 * `static NumericType.fromNumber(value: number): NumericType`
 
   Create an instance of the numeric type from a regular JavaScript number.
+  The number must be finite. The integer types also require a whole number,
+  and `Integer` requires one that is safe, so nothing is rounded or dropped
+  without you knowing.
 
 * `static NumericType.parse(value: string): NumericType`
 
-  Create an instance of the numeric type from a string.
+  Create an instance of the numeric type from a string. Whitespace around the
+  value is ignored. Anything that is not a number in the form the type accepts
+  is rejected, so `parse` never returns a value that is only part of the input.
 
 * `numericType.toString(): string`
 
-  Turn the numeric type into a string representation supported by `fromString`.
+  Turn the numeric type into a string representation that `parse` accepts.
+
+### Errors
+
+Every failure is reported as a `MathError`, which is exported from
+`numeric-types`. This includes input that can not be parsed, a value that does
+not fit the type, a division by zero, and an operation that mixes two
+different types.
+
+```javascript
+import { MathError } from 'numeric-types';
+import { Decimal } from 'numeric-types/decimal';
+
+try {
+	Decimal.parse('not a number');
+} catch(ex) {
+	if(ex instanceof MathError) {
+		// Handle the invalid input
+	}
+}
+```
 
 ## `MathContext` and rounding
 
@@ -62,6 +90,14 @@ const contextWithScale = MathContext.ofScale(2, RoundingMode.HalfUp);
 // Context that requests at max 10 digits of precision
 const contextWithPrecision = MathContext.ofPrecision(10, RoundingMode.Ceiling);
 ```
+
+Scale is the number of digits after the decimal point, so a scale of 2 turns
+`1.005` into `1.01`. Precision is the number of significant digits, so a
+precision of 2 turns `123.456` into `120` and `0.001234` into `0.0012`. A
+precision must be at least 1.
+
+A context can carry only one of the two. If you build a context with the
+constructor and set both, the scale is used and the precision is ignored.
 
 ### Rounding modes
 
@@ -98,6 +134,13 @@ import { AbstractDecimal, Decimal } from 'numeric-types/decimal';
 
 const decimal: AbstractDecimal<any> = Decimal.fromNumber(0.1);
 ```
+
+`Decimal` throws a `MathError` when a result needs more digits than a `number`
+can hold exactly. It reports the limit instead of dropping digits, so a result
+you receive is always exact. Use `BigDecimal` for values that need more room.
+
+The two types can not be mixed in one operation. An operation that receives a
+`Decimal` and a `BigDecimal` throws a `MathError`.
 
 ### Operations
 
@@ -139,13 +182,14 @@ import { operationHere, anotherOperation } from 'numeric-types/decimal';
 
 * `scale(a: DecimalType, context: MathContext): DecimalType`
 
-  Scale the given decimal number according to the specified context.
+  Scale the given decimal number according to the specified context. The
+  context can request a scale or a precision.
 
 * `round(a: DecimalType, roundingMode?: RoundingMode): DecimalType`
 
-  Round the given decimal number. If the rounding mode is not specified
-  `RoundingMode.HalfUp` is used. This is equivalent to calling `scale` with
-  `MathContext.ofScale(0, roundingMode)`.
+  Round the given decimal number to a whole number. If the rounding mode is
+  not specified `RoundingMode.HalfUp` is used. This is equivalent to calling
+  `scale` with `MathContext.ofScale(0, roundingMode)`.
 
 * `add(a: DecimalType, b: DecimalType, context?: MathContext): DecimalType`
 
@@ -164,8 +208,17 @@ import { operationHere, anotherOperation } from 'numeric-types/decimal';
 
 * `divide(a: DecimalType, b: DecimalType, context: MathContext): DecimalType`
 
-  Divide a decimal number `b` from the number `a`. A context is required to
-  determine the scale and how to round things.
+  Divide the number `a` by the divisor `b`. A context is required, as a
+  division rarely has an exact result and the context decides how many digits
+  are kept and how they are rounded.
+
+  A context that carries neither a scale nor a precision keeps 5 digits after
+  the decimal point and then removes trailing zeroes. A divisor of zero throws
+  a `MathError`.
+
+Without a context, `add`, `subtract` and `multiply` are exact, and trailing
+zeroes are removed from the result. `0.50 + 0.50` is therefore `1` and not
+`1.00`. Pass a context when the result has to keep a specific shape.
 
 ## Type: Integer
 
@@ -190,6 +243,13 @@ import { AbstractInteger, Integer } from 'numeric-types/integer';
 
 const integer: AbstractInteger<any> = Integer.fromNumber(1);
 ```
+
+Both types accept only whole numbers. `Integer.fromNumber(1.5)` throws a
+`MathError` instead of rounding, and `Integer` also rejects a value outside
+the safe range of `number`. Use `BigInteger` for values that are larger.
+
+The two types can not be mixed in one operation. An operation that receives an
+`Integer` and a `BigInteger` throws a `MathError`.
 
 ### Operations
 
@@ -235,7 +295,7 @@ import { operationHere, anotherOperation } from 'numeric-types/integer';
 
 * `subtract(a: IntegerType, b: IntegerType): IntegerType`
 
-  Subtract `b` from `a`
+  Subtract `b` from `a`.
 
 * `multiply(a: IntegerType, b: IntegerType): IntegerType`
 
@@ -243,4 +303,48 @@ import { operationHere, anotherOperation } from 'numeric-types/integer';
 
 * `divide(a: IntegerType, b: IntegerType): IntegerType`
 
-  Divide `a` by the divisor `b`.
+  Divide `a` by the divisor `b`. The result is truncated towards zero, so
+  `-7 / 2` is `-3`. A divisor of zero throws a `MathError`.
+
+* `remainder(a: IntegerType, b: IntegerType): IntegerType`
+
+  Get what remains after `a` is divided by `b`. The remainder carries the sign
+  of `a`, so `-7 % 2` is `-1`. Together with `divide` this holds:
+  `divide(a, b) * b + remainder(a, b) === a`. A divisor of zero throws a
+  `MathError`.
+
+* `exponentiate(a: IntegerType, b: IntegerType): IntegerType`
+
+  Raise `a` to the power of `b`. The exponent must not be negative, as a
+  negative exponent describes a fraction.
+
+* `unaryMinus(a: IntegerType): IntegerType`
+
+  Get the negated integer.
+
+### Bitwise operations
+
+These work over the whole range of the type, and not only over the 32 bits
+that the JavaScript operators use. A result that no longer fits the type
+throws a `MathError`.
+
+* `bitwiseAnd(a: IntegerType, b: IntegerType): IntegerType`
+
+  Combine two integers with a bitwise and.
+
+* `bitwiseOr(a: IntegerType, b: IntegerType): IntegerType`
+
+  Combine two integers with a bitwise or.
+
+* `bitwiseNot(a: IntegerType): IntegerType`
+
+  Invert every bit of the integer.
+
+* `leftShift(a: IntegerType, amount: number): IntegerType`
+
+  Shift the integer to the left by the given number of bits.
+
+* `signedRightShift(a: IntegerType, amount: number): IntegerType`
+
+  Shift the integer to the right by the given number of bits, keeping its
+  sign.
