@@ -1,4 +1,4 @@
-import { AbstractInteger } from './AbstractInteger';
+import { AbstractInteger } from './AbstractInteger.js';
 
 /**
  * Service Provider Interface for supporting an integer implementation.

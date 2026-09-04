@@ -2,13 +2,15 @@
   "name": "numeric-types",
   "version": "0.3.1",
   "description": "Numeric types such as precise decimals",
+  "type": "module",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "ci": "npm run coverage && npm run lint",
-    "coverage": "jest --coverage",
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "build": "tsc --module commonjs --target es5 --outDir dist/cjs && tsc --module es6 --target es6 --outDir dist/esm",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "ci": "npm run typecheck && npm run lint && npm run coverage",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint src test",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
     "prebuild": "rimraf dist",
     "prepublishOnly": "npm run build"
   },
@@ -19,26 +21,41 @@
     "decimal",
     "integer"
   ],
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./decimal": {
+      "types": "./dist/decimal/index.d.ts",
+      "default": "./dist/decimal/index.js"
+    },
+    "./integer": {
+      "types": "./dist/integer/index.d.ts",
+      "default": "./dist/integer/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=20.0.0"
   },
   "dependencies": {
-    "jsbi": "^3.1.1",
-    "ts-custom-error": "^3.1.1"
+    "ts-custom-error": "^3.3.1"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.7.9",
-    "coveralls": "^3.0.6",
-    "jest": "^24.9.0",
-    "jest-config": "^24.9.0",
-    "rimraf": "^3.0.0",
-    "ts-jest": "^24.1.0",
-    "tslint": "^5.20.0",
-    "typescript": "^3.6.3"
+    "@eslint/js": "^9.0.0",
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "eslint": "^9.0.0",
+    "rimraf": "^6.0.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^3.0.0"
   }
 }

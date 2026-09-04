@@ -1,10 +1,10 @@
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
-import { EXPONENT, COEFFICIENT } from './symbols';
+import { EXPONENT, COEFFICIENT } from './symbols.js';
 
-import { MathContext } from '../../MathContext';
-import { rescaleCoefficientAndExponent } from './rescalingOp';
+import { MathContext } from '../../MathContext.js';
+import { rescaleCoefficientAndExponent } from './rescalingOp.js';
 
 /**
  * Operation that multiplies two values with each other.

@@ -1,10 +1,10 @@
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
-import { MathContext } from '../../MathContext';
+import { MathContext } from '../../MathContext.js';
 
-import { EXPONENT, COEFFICIENT } from './symbols';
-import { rescaleCoefficientAndExponent } from './rescalingOp';
+import { EXPONENT, COEFFICIENT } from './symbols.js';
+import { rescaleCoefficientAndExponent } from './rescalingOp.js';
 
 /**
  * Operation that adds two decimals together.

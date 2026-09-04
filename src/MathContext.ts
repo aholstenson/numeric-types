@@ -1,4 +1,4 @@
-import { RoundingMode } from './RoundingMode';
+import { RoundingMode } from './RoundingMode.js';
 
 export class MathContext {
 	public readonly roundingMode: RoundingMode;

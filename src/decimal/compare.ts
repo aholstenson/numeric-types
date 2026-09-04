@@ -1,7 +1,7 @@
-import { AbstractDecimal } from './AbstractDecimal';
-import { validateCompatible } from './validateCompatible';
-import { SPI } from './ops/symbols';
-import { compareOp } from './ops/compareOp';
+import { AbstractDecimal } from './AbstractDecimal.js';
+import { validateCompatible } from './validateCompatible.js';
+import { SPI } from './ops/symbols.js';
+import { compareOp } from './ops/compareOp.js';
 
 /**
  * Compare two decimal numbers. Returns `0` if the numbers are equal, `-1`

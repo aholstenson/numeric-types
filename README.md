@@ -1,9 +1,8 @@
 # Numeric types for JavaScript
 
 [![npm version](https://badge.fury.io/js/numeric-types.svg)](https://badge.fury.io/js/numeric-types)
-[![Build Status](https://travis-ci.org/aholstenson/numeric-types.svg?branch=master)](https://travis-ci.org/aholstenson/numeric-types)
+[![Build Status](https://github.com/aholstenson/numeric-types/actions/workflows/ci.yml/badge.svg)](https://github.com/aholstenson/numeric-types/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/aholstenson/numeric-types/badge.svg)](https://coveralls.io/github/aholstenson/numeric-types)
-[![Dependencies](https://david-dm.org/aholstenson/numeric-types.svg)](https://david-dm.org/aholstenson/numeric-types)
 
 This library contains implementations of useful numeric types for JavaScript
 and TypeScript.
@@ -11,6 +10,9 @@ and TypeScript.
 ```
 npm install numeric-types
 ```
+
+This is an ES module package and it needs Node 20 or later. Use `import` to
+load it. Node 22.12 and later can also load it with `require`.
 
 ## Features and status
 
@@ -23,7 +25,7 @@ This is currently an early release.
   * Basic math operations: add, subtract, multiply, divide
 * Integer representation
   * `Integer` for integers between `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`
-  * `BigInteger` for large integers
+  * `BigInteger` for large integers, on top of the built-in `bigint` type
 
 ## API
 
@@ -104,8 +106,6 @@ separately like:
 
 ```javascript
 import { operationHere, anotherOperation } from 'numeric-types/decimal';
-
-const { operationHere, anotherOperation } = require('numeric-types/decimal');
 ```
 
 * `compare(a: DecimalType, b: DecimalType): -1 | 0 | 1`
@@ -171,7 +171,7 @@ const { operationHere, anotherOperation } = require('numeric-types/decimal');
 
 Integer is an implementation of a whole number. There are currently two versions
 available, `Integer` which is limited to the range of `number` and `BigInteger`
-which is can represent larger numbers.
+which uses the built-in `bigint` type to represent larger numbers.
 
 ```javascript
 import { Integer, multiply } from 'numeric-types/integer';
@@ -198,8 +198,6 @@ separately like:
 
 ```javascript
 import { operationHere, anotherOperation } from 'numeric-types/integer';
-
-const { operationHere, anotherOperation } = require('numeric-types/integer');
 ```
 
 * `compare(a: IntegerType, b: IntegerType): -1 | 0 | 1`

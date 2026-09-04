@@ -1,12 +1,11 @@
-import { MathError } from '../MathError';
-import { BigInteger, remainder, compare, add, subtract, divide, multiply, exponentiate, unaryMinus } from '../integer';
+import { BigInteger, remainder, compare, add, subtract, divide, multiply, exponentiate, unaryMinus } from '../integer/index.js';
 
-import { AbstractDecimal } from './AbstractDecimal';
-import { DecimalSPI } from './DecimalSPI';
-import { SPI } from './ops/symbols';
+import { AbstractDecimal } from './AbstractDecimal.js';
+import type { DecimalSPI } from './DecimalSPI.js';
+import { SPI } from './ops/symbols.js';
 
-import { convertNumber } from './ops/convertNumber';
-import { convertString } from './ops/convertString';
+import { convertNumber } from './ops/convertNumber.js';
+import { convertString } from './ops/convertString.js';
 
 /**
  * Decimal implementation with near-unlimited precision.
@@ -24,12 +23,6 @@ export class BigDecimal extends AbstractDecimal<BigInteger> {
 
 	public static parse(input: string): BigDecimal {
 		return convertString(BigDecimal[SPI], input);
-	}
-}
-
-function checkSafe(a: number) {
-	if(! Number.isSafeInteger(a)) {
-		throw new MathError('Coefficient is not a safe integer, got ' + a);
 	}
 }
 

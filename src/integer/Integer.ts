@@ -1,7 +1,7 @@
-import { AbstractInteger } from './AbstractInteger';
-import { SPI } from './ops/symbols';
-import { IntegerSPI } from './IntegerSPI';
-import { MathError } from '../MathError';
+import { AbstractInteger } from './AbstractInteger.js';
+import { SPI } from './ops/symbols.js';
+import type { IntegerSPI } from './IntegerSPI.js';
+import { MathError } from '../MathError.js';
 
 /**
  * Integer implementation for use with numbers within the range of

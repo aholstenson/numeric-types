@@ -1,8 +1,7 @@
 import JSBI from 'jsbi';
-
-import { AbstractInteger } from './AbstractInteger';
-import { SPI } from './ops/symbols';
-import { IntegerSPI } from './IntegerSPI';
+import { AbstractInteger } from './AbstractInteger.js';
+import { SPI } from './ops/symbols.js';
+import type { IntegerSPI } from './IntegerSPI.js';
 
 /**
  * Integer implementation that supports large numbers.

@@ -1,31 +1,26 @@
 {
 	"compilerOptions": {
-		"moduleResolution": "node",
-		"target": "es5",
-		"module":"es2015",
-		"lib": [ "es2015", "es2016", "es2017" ],
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"target": "es2022",
+		"lib": [ "es2022" ],
 
 		"strict": true,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
 
 		"sourceMap": true,
 		"declaration": true,
 		"declarationMap": true,
 
-		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 
-		"downlevelIteration": true,
+		"noEmit": true,
 
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-
-		"declarationDir": "dist/types",
-
-		"typeRoots": [
-			"node_modules/@types"
-		]
+		"types": [ "node", "vitest/globals" ]
 	},
 	"include": [
-		"src"
+		"src",
+		"test"
 	]
 }

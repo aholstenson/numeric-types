@@ -1,6 +1,6 @@
-import { EXPONENT, COEFFICIENT } from './symbols';
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { EXPONENT, COEFFICIENT } from './symbols.js';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
 /**
  * Perform a reduction of the given decimal value.

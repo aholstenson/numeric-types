@@ -1,8 +1,8 @@
-import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols';
+import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols.js';
 
-import { DecimalSPI } from './DecimalSPI';
+import type { DecimalSPI } from './DecimalSPI.js';
 
-import { toString } from './toString';
+import { toString } from './toString.js';
 
 /**
  * Base class for decimal values. Stores numbers in two parts, a coefficient

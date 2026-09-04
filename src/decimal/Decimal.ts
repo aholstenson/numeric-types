@@ -1,11 +1,11 @@
-import { MathError } from '../MathError';
+import { MathError } from '../MathError.js';
 
-import { AbstractDecimal } from './AbstractDecimal';
-import { DecimalSPI } from './DecimalSPI';
-import { SPI } from './ops/symbols';
+import { AbstractDecimal } from './AbstractDecimal.js';
+import type { DecimalSPI } from './DecimalSPI.js';
+import { SPI } from './ops/symbols.js';
 
-import { convertNumber } from './ops/convertNumber';
-import { convertString } from './ops/convertString';
+import { convertNumber } from './ops/convertNumber.js';
+import { convertString } from './ops/convertString.js';
 
 /**
  * Decimal implementation with limited precision.

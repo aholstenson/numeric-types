@@ -1,5 +1,5 @@
-import { SPI, VALUE } from './ops/symbols';
-import { IntegerSPI } from './IntegerSPI';
+import { SPI, VALUE } from './ops/symbols.js';
+import type { IntegerSPI } from './IntegerSPI.js';
 
 /**
  * Base class for integer values.

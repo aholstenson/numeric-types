@@ -1,8 +1,8 @@
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
-import { convertNumber } from './convertNumber';
-import { convertString } from './convertString';
+import { convertNumber } from './convertNumber.js';
+import { convertString } from './convertString.js';
 
 export function convertAny<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
@@ -15,6 +15,6 @@ export function convertAny<C, D extends AbstractDecimal<C>>(
 	} else if(input instanceof AbstractDecimal) {
 		return input;
 	} else {
-		throw new Error('Can not convert to decimal, got data of type `' + typeof input + `'`);
+		throw new Error('Can not convert to decimal, got data of type `' + typeof input + '`');
 	}
 }

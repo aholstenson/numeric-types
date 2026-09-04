@@ -1,10 +1,10 @@
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
-import { EXPONENT, COEFFICIENT } from './symbols';
+import { EXPONENT, COEFFICIENT } from './symbols.js';
 
-import { rescaleCoefficient } from './rescalingOp';
-import { RoundingMode } from '../../RoundingMode';
+import { rescaleCoefficient } from './rescalingOp.js';
+import { RoundingMode } from '../../RoundingMode.js';
 
 /**
  *

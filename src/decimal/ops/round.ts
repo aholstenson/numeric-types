@@ -1,9 +1,9 @@
-import { MathError } from '../../MathError';
+import { MathError } from '../../MathError.js';
 
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
-import { RoundingMode } from '../../RoundingMode';
+import { RoundingMode } from '../../RoundingMode.js';
 
 /**
  * Perform rounding on a coefficient and remainder.
@@ -54,7 +54,7 @@ export function round<C, D extends AbstractDecimal<C>>(
 			break;
 		case RoundingMode.HalfDown:
 		case RoundingMode.HalfEven:
-		case RoundingMode.HalfUp:
+		case RoundingMode.HalfUp: {
 			const r = spi.firstDigit(remainder);
 			if(r < 5) {
 				// Round towards zero
@@ -84,6 +84,8 @@ export function round<C, D extends AbstractDecimal<C>>(
 					increment = ! isEven;
 				}
 			}
+			break;
+		}
 	}
 
 	if(increment) {

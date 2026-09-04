@@ -1,11 +1,11 @@
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
-import { EXPONENT, COEFFICIENT } from './symbols';
-import { MathContext, hasScaleOrPrecision } from '../../MathContext';
+import { EXPONENT, COEFFICIENT } from './symbols.js';
+import { MathContext, hasScaleOrPrecision } from '../../MathContext.js';
 
-import { RoundingMode } from '../../RoundingMode';
-import { round } from './round';
+import { RoundingMode } from '../../RoundingMode.js';
+import { round } from './round.js';
 
 /**
  * Rescale the given number to the scale specified by the given math context.

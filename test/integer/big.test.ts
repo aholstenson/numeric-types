@@ -9,7 +9,7 @@ import {
 	unaryMinus,
 	leftShift,
 	signedRightShift
-} from '../../src/integer';
+} from '../../src/integer/index.js';
 
 describe('Integer', function() {
 	describe('BigInteger', function() {

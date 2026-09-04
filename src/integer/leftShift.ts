@@ -1,5 +1,5 @@
-import { AbstractInteger } from './AbstractInteger';
-import { VALUE, SPI } from './ops/symbols';
+import { AbstractInteger } from './AbstractInteger.js';
+import { VALUE, SPI } from './ops/symbols.js';
 
 /**
  * Perform a left shift for the given number.

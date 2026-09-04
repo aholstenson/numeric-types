@@ -1,8 +1,8 @@
-import { AbstractDecimal } from './AbstractDecimal';
-import { SPI } from './ops/symbols';
+import { AbstractDecimal } from './AbstractDecimal.js';
+import { SPI } from './ops/symbols.js';
 
-import { MathContext } from '../MathContext';
-import { rescaleOp } from './ops/rescalingOp';
+import { MathContext } from '../MathContext.js';
+import { rescaleOp } from './ops/rescalingOp.js';
 
 /**
  * Scale the given decimal number using the rules outlined by the context.

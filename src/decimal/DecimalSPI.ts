@@ -1,4 +1,4 @@
-import { AbstractDecimal } from './AbstractDecimal';
+import { AbstractDecimal } from './AbstractDecimal.js';
 
 /**
  * Service Provider Interface for supporting a decimal implementation. This

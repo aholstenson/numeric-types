@@ -1,7 +1,7 @@
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
-import { convertString } from './convertString';
+import { convertString } from './convertString.js';
 
 export function convertNumber<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, n: number): D {
 	if(typeof n !== 'number') {

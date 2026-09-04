@@ -1,11 +1,11 @@
-import { BigDecimal } from '../../src/decimal/BigDecimal';
-import { RoundingMode } from '../../src/RoundingMode';
+import { BigDecimal } from '../../src/decimal/BigDecimal.js';
+import { RoundingMode } from '../../src/RoundingMode.js';
 
-import { add } from '../../src/decimal/add';
-import { subtract } from '../../src/decimal/subtract';
-import { multiply } from '../../src/decimal/multiply';
-import { divide } from '../../src/decimal/divide';
-import { compare, isEqual, isGreaterThanOrEqual, isGreaterThan, isLessThanOrEqual, isLessThan } from '../../src/decimal/compare';
+import { add } from '../../src/decimal/add.js';
+import { subtract } from '../../src/decimal/subtract.js';
+import { multiply } from '../../src/decimal/multiply.js';
+import { divide } from '../../src/decimal/divide.js';
+import { compare, isEqual, isGreaterThanOrEqual, isGreaterThan, isLessThanOrEqual, isLessThan } from '../../src/decimal/compare.js';
 
 describe('Decimal', function() {
 	describe('Big', function() {

@@ -1,8 +1,8 @@
-import { AbstractDecimal } from './AbstractDecimal';
-import { SPI } from './ops/symbols';
+import { AbstractDecimal } from './AbstractDecimal.js';
+import { SPI } from './ops/symbols.js';
 
-import { rescaleOp } from './ops/rescalingOp';
-import { RoundingMode } from '../RoundingMode';
+import { rescaleOp } from './ops/rescalingOp.js';
+import { RoundingMode } from '../RoundingMode.js';
 
 /**
  * Round the given decimal number, optionally specifying the rounding mode to

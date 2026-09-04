@@ -1,4 +1,4 @@
-import { AbstractDecimal } from './AbstractDecimal';
+import { AbstractDecimal } from './AbstractDecimal.js';
 
 /**
  * Validate that the two supplied decimal instances are compatible.

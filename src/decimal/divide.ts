@@ -1,9 +1,9 @@
-import { AbstractDecimal } from './AbstractDecimal';
-import { validateCompatible } from './validateCompatible';
-import { SPI } from './ops/symbols';
+import { AbstractDecimal } from './AbstractDecimal.js';
+import { validateCompatible } from './validateCompatible.js';
+import { SPI } from './ops/symbols.js';
 
-import { MathContext } from '../MathContext';
-import { divideOp } from './ops/divideOp';
+import { MathContext } from '../MathContext.js';
+import { divideOp } from './ops/divideOp.js';
 
 /**
  * Divide a number with another one.

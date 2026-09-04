@@ -1,9 +1,9 @@
-import { AbstractDecimal } from './AbstractDecimal';
-import { validateCompatible } from './validateCompatible';
-import { SPI } from './ops/symbols';
+import { AbstractDecimal } from './AbstractDecimal.js';
+import { validateCompatible } from './validateCompatible.js';
+import { SPI } from './ops/symbols.js';
 
-import { addOp } from './ops/addOp';
-import { MathContext } from '../MathContext';
+import { addOp } from './ops/addOp.js';
+import { MathContext } from '../MathContext.js';
 
 /**
  * Add two decimal numbers together.

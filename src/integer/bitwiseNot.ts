@@ -1,5 +1,5 @@
-import { AbstractInteger } from './AbstractInteger';
-import { VALUE, SPI } from './ops/symbols';
+import { AbstractInteger } from './AbstractInteger.js';
+import { VALUE, SPI } from './ops/symbols.js';
 
 /**
  * Perform a bitwise not on the integer.

@@ -1,11 +1,11 @@
-import { AbstractDecimal } from '../AbstractDecimal';
-import { DecimalSPI } from '../DecimalSPI';
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
-import { EXPONENT, COEFFICIENT } from './symbols';
-import { MathContext } from '../../MathContext';
+import { EXPONENT, COEFFICIENT } from './symbols.js';
+import { MathContext } from '../../MathContext.js';
 
-import { round } from './round';
-import { calculateExponent } from './rescalingOp';
+import { round } from './round.js';
+import { calculateExponent } from './rescalingOp.js';
 
 /**
  * Perform a reduction of the given decimal value.

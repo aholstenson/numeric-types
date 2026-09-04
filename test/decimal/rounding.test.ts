@@ -1,7 +1,7 @@
-import { Decimal } from '../../src/decimal/Decimal';
-import { RoundingMode } from '../../src/RoundingMode';
-import { round } from '../../src/decimal/ops/round';
-import { SPI } from '../../src/decimal/ops/symbols';
+import { Decimal } from '../../src/decimal/Decimal.js';
+import { RoundingMode } from '../../src/RoundingMode.js';
+import { round } from '../../src/decimal/ops/round.js';
+import { SPI } from '../../src/decimal/ops/symbols.js';
 
 function doRound(mode: RoundingMode, c: number, q: number): number {
 	const spi = Decimal[SPI];

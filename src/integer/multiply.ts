@@ -1,5 +1,5 @@
-import { AbstractInteger } from './AbstractInteger';
-import { VALUE, SPI } from './ops/symbols';
+import { AbstractInteger } from './AbstractInteger.js';
+import { VALUE, SPI } from './ops/symbols.js';
 
 /**
  * Multiply two integers together.
