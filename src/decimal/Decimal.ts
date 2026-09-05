@@ -1,8 +1,13 @@
 import { MathError } from '../MathError.js';
 
+import { AbstractInteger } from '../integer/AbstractInteger.js';
+import { VALUE } from '../integer/ops/symbols.js';
+import type { Integer } from '../integer/Integer.js';
+
 import { AbstractDecimal } from './AbstractDecimal.js';
+import type { BigDecimal } from './BigDecimal.js';
 import type { DecimalSPI } from './DecimalSPI.js';
-import { SPI } from './ops/symbols.js';
+import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols.js';
 
 import { convertNumber } from './ops/convertNumber.js';
 import { convertString } from './ops/convertString.js';
@@ -25,6 +30,38 @@ export class Decimal extends AbstractDecimal<number> {
 
 	public static parse(input: string): Decimal {
 		return convertString(Decimal[SPI], input);
+	}
+
+	/**
+	 * Create a decimal from a `BigDecimal`, keeping its scale.
+	 *
+	 * A `BigDecimal` can hold more digits than a `Decimal`, so a value that
+	 * needs too many of them throws a `MathError` instead of losing digits.
+	 * Use `scale` or `round` on the `BigDecimal` first if the value is allowed
+	 * to lose digits.
+	 */
+	public static fromBigDecimal(a: BigDecimal): Decimal {
+		/*
+		 * Both decimal types are an `AbstractDecimal`, so the check looks at
+		 * the coefficient. Only `Decimal` keeps that as a `number`.
+		 */
+		if(! (a instanceof AbstractDecimal) || typeof a[COEFFICIENT] === 'number') {
+			throw new MathError('Expected a BigDecimal');
+		}
+
+		return new Decimal(a[COEFFICIENT].toNumber(), a[EXPONENT]);
+	}
+
+	/**
+	 * Create a decimal from an `Integer`. The result has no digits after the
+	 * decimal point.
+	 */
+	public static fromInteger(a: Integer): Decimal {
+		if(! (a instanceof AbstractInteger) || typeof a[VALUE] !== 'number') {
+			throw new MathError('Expected an Integer');
+		}
+
+		return new Decimal(a[VALUE], 0);
 	}
 }
 
@@ -125,5 +162,10 @@ Decimal[SPI] = {
 
 	absolute(a) {
 		return Math.abs(a);
+	},
+
+	negate(a) {
+		// A safe integer stays safe when its sign is flipped.
+		return -a;
 	}
 } as DecimalSPI<number, Decimal>;

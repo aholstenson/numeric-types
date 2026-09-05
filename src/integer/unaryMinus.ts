@@ -1,16 +1,12 @@
 import { AbstractInteger } from './AbstractInteger.js';
-import { VALUE, SPI } from './ops/symbols.js';
+import { negate } from './negate.js';
 
 /**
- * Get the unary minus of the given integer.
+ * Get the unary minus of the given integer. This is another name for
+ * `negate`, which the decimal types use as well.
  *
  * @param a
  */
 export function unaryMinus<I extends AbstractInteger<any>>(a: I): I {
-	const spi = a[SPI];
-
-	const aValue = a[VALUE];
-	const r = spi.unaryMinus(aValue);
-
-	return spi.newInstance(r);
+	return negate(a);
 }

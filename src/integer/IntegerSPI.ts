@@ -81,6 +81,27 @@ export interface IntegerSPI<V, I extends AbstractInteger<V>> {
 	unaryMinus(a: V): V;
 
 	/**
+	 * Get the absolute value of the number.
+	 *
+	 * @param a
+	 */
+	absolute(a: V): V;
+
+	/**
+	 * Wrap a regular number into the value that this implementation uses.
+	 *
+	 * @param a
+	 */
+	wrap(a: number): V;
+
+	/**
+	 * Get the nearest `number` to the given value.
+	 *
+	 * @param a
+	 */
+	toNumber(a: V): number;
+
+	/**
 	 * Perform a bitwise not for the given number.
 	 *
 	 * @param a

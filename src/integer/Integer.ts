@@ -1,5 +1,6 @@
 import { AbstractInteger } from './AbstractInteger.js';
-import { SPI } from './ops/symbols.js';
+import { SPI, VALUE } from './ops/symbols.js';
+import type { BigInteger } from './BigInteger.js';
 import type { IntegerSPI } from './IntegerSPI.js';
 import { MathError } from '../MathError.js';
 import { validateIntegerString } from './ops/parseString.js';
@@ -34,6 +35,29 @@ export class Integer extends AbstractInteger<number> {
 		const value = BigInt(validateIntegerString(input));
 		if(value > MAX_SAFE || value < MIN_SAFE) {
 			throw new MathError('Number can not be turned into a safe integer, received: ' + input);
+		}
+
+		return Integer[SPI].newInstance(Number(value));
+	}
+
+	/**
+	 * Create an integer from a `BigInteger`.
+	 *
+	 * A `BigInteger` covers a larger range, so a value outside the safe range
+	 * of `number` throws a `MathError` instead of losing its last digits.
+	 */
+	public static fromBigInteger(a: BigInteger): Integer {
+		/*
+		 * Both integer types are an `AbstractInteger`, so the check looks at
+		 * the value. Only `BigInteger` keeps that as a `bigint`.
+		 */
+		if(! (a instanceof AbstractInteger) || typeof a[VALUE] !== 'bigint') {
+			throw new MathError('Expected a BigInteger');
+		}
+
+		const value = a[VALUE];
+		if(value > MAX_SAFE || value < MIN_SAFE) {
+			throw new MathError('Number can not be turned into a safe integer, received: ' + value);
 		}
 
 		return Integer[SPI].newInstance(Number(value));
@@ -84,6 +108,18 @@ Integer[SPI] = {
 
 	unaryMinus(a: number): number {
 		return -a;
+	},
+
+	absolute(a: number): number {
+		return Math.abs(a);
+	},
+
+	wrap(a: number): number {
+		return a;
+	},
+
+	toNumber(a: number): number {
+		return a;
 	},
 
 	/*

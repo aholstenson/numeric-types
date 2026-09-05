@@ -1,5 +1,6 @@
 import { AbstractInteger } from './AbstractInteger.js';
-import { SPI } from './ops/symbols.js';
+import { SPI, VALUE } from './ops/symbols.js';
+import type { Integer } from './Integer.js';
 import type { IntegerSPI } from './IntegerSPI.js';
 import { MathError } from '../MathError.js';
 import { validateIntegerString } from './ops/parseString.js';
@@ -25,10 +26,37 @@ export class BigInteger extends AbstractInteger<bigint> {
 	}
 
 	/**
+	 * Create an integer from a `bigint`.
+	 */
+	public static fromBigInt(a: bigint): BigInteger {
+		if(typeof a !== 'bigint') {
+			throw new MathError('Can only be used with a bigint, received object with type ' + typeof a);
+		}
+
+		return BigInteger[SPI].newInstance(a);
+	}
+
+	/**
 	 * Create an integer from a string holding its base-10 representation.
 	 */
 	public static parse(input: string): BigInteger {
 		return BigInteger[SPI].newInstance(BigInt(validateIntegerString(input)));
+	}
+
+	/**
+	 * Create an integer from an `Integer`. Every `Integer` fits, so this
+	 * conversion never fails.
+	 */
+	public static fromInteger(a: Integer): BigInteger {
+		/*
+		 * Both integer types are an `AbstractInteger`, so the check looks at
+		 * the value. Only `Integer` keeps that as a `number`.
+		 */
+		if(! (a instanceof AbstractInteger) || typeof a[VALUE] !== 'number') {
+			throw new MathError('Expected an Integer');
+		}
+
+		return BigInteger[SPI].newInstance(BigInt(a[VALUE]));
 	}
 }
 
@@ -71,6 +99,18 @@ BigInteger[SPI] = {
 
 	unaryMinus(a) {
 		return -a;
+	},
+
+	absolute(a) {
+		return a < 0n ? -a : a;
+	},
+
+	wrap(a) {
+		return BigInt(a);
+	},
+
+	toNumber(a) {
+		return Number(a);
 	},
 
 	bitwiseNot(a) {

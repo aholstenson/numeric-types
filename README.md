@@ -24,11 +24,17 @@ This is currently an early release.
 * Decimal number representation
   * `Decimal` on top of `number` with limited precision of 15 digits
   * `BigDecimal` for more precise numbers, with up to `Number.MAX_SAFE_INTEGER` digits
-  * Basic math operations: add, subtract, multiply, divide
+  * Basic math operations: add, subtract, multiply, divide, remainder and pow
 * Integer representation
   * `Integer` for integers between `Number.MIN_SAFE_INTEGER` and `Number.MAX_SAFE_INTEGER`
   * `BigInteger` for large integers, on top of the built-in `bigint` type
   * Math operations, and the bitwise operations over the full range of the type
+* The same set of basics for both families: `abs`, `negate`, `sign`, `isZero`,
+  `min` and `max`
+* Conversion between the two versions of a type, and from an integer to a
+  decimal
+* `toNumber` and `toJSON` on every value, so a number survives
+  `JSON.stringify` with all of its digits
 
 ## API
 
@@ -55,6 +61,67 @@ imported. This design is to allow the library to take advantage of tree-shaking.
 * `numericType.toString(): string`
 
   Turn the numeric type into a string representation that `parse` accepts.
+
+* `numericType.toNumber(): number`
+
+  Get the nearest `number` to the value. A `number` can not hold every value
+  that these types can, so digits are lost when the value needs more of them
+  than a `number` has, and a value that is too large becomes `Infinity`. Use
+  `toString` when every digit matters.
+
+* `numericType.toJSON(): string`
+
+  Called by `JSON.stringify`. JSON has no exact decimal type and a large
+  integer does not survive a JSON number, so the value is written as a string
+  and keeps all of its digits.
+
+  ```javascript
+  JSON.stringify({ amount: Decimal.parse('0.10') }); // {"amount":"0.10"}
+  ```
+
+  Read the value back with `parse`, which accepts what `toJSON` writes.
+
+Every type also implements `Symbol.toPrimitive`, so a value converts when
+JavaScript needs a primitive. `Number(value)` and a comparison such as
+`a < b` use the number form, and everything else uses the string form. `+` is
+therefore a string join and not math:
+
+```javascript
+`${Decimal.parse('1.50')}`     // '1.50'
+Number(Decimal.parse('1.50'))  // 1.5
+'' + Decimal.parse('1.50')     // '1.50'
+```
+
+Use the operations below for math, as they keep every digit.
+
+### Conversion between types
+
+Each type can be built from the other version of itself, and the decimal types
+can also be built from an integer.
+
+* `static BigDecimal.fromDecimal(value: Decimal): BigDecimal`
+* `static Decimal.fromBigDecimal(value: BigDecimal): Decimal`
+* `static BigInteger.fromInteger(value: Integer): BigInteger`
+* `static Integer.fromBigInteger(value: BigInteger): Integer`
+* `static Decimal.fromInteger(value: Integer): Decimal`
+* `static BigDecimal.fromBigInteger(value: BigInteger): BigDecimal`
+
+A conversion keeps the scale of the number, so `1.50` stays `1.50`. Going to a
+big type always works. Going the other way throws a `MathError` when the value
+needs more digits than the smaller type holds, so nothing is dropped without
+you knowing.
+
+```javascript
+import { Decimal, BigDecimal } from 'numeric-types/decimal';
+
+const big = BigDecimal.fromDecimal(Decimal.parse('1.50'));
+const back = Decimal.fromBigDecimal(big);
+```
+
+The big types also read the built-in `bigint` type:
+
+* `static BigInteger.fromBigInt(value: bigint): BigInteger`
+* `static BigDecimal.fromBigInt(value: bigint): BigDecimal`
 
 ### Errors
 
@@ -176,9 +243,33 @@ import { operationHere, anotherOperation } from 'numeric-types/decimal';
 
   Get if the decimal number `a` is greater than or equal to the number `b`.
 
+* `min(a: DecimalType, b: DecimalType): DecimalType`
+
+  Get the smaller of two decimal numbers. Two numbers can be equal and still
+  be written with a different scale, and `a` is returned in that case.
+
+* `max(a: DecimalType, b: DecimalType): DecimalType`
+
+  Get the larger of two decimal numbers. Two numbers can be equal and still be
+  written with a different scale, and `a` is returned in that case.
+
+* `isZero(a: DecimalType): boolean`
+
+  Get if a decimal number is zero. The scale does not matter, so `0`, `0.0`
+  and `0e10` are all zero.
+
+* `sign(a: DecimalType): -1 | 0 | 1`
+
+  Get the sign of a decimal number. Returns `-1` for a negative number, `0`
+  for zero and `1` for a positive number.
+
 * `toString(a: DecimalType): string`
 
   Turn a decimal numbers into its string representation.
+
+* `toNumber(a: DecimalType): number`
+
+  Get the nearest `number` to a decimal number.
 
 * `scale(a: DecimalType, context: MathContext): DecimalType`
 
@@ -190,6 +281,16 @@ import { operationHere, anotherOperation } from 'numeric-types/decimal';
   Round the given decimal number to a whole number. If the rounding mode is
   not specified `RoundingMode.HalfUp` is used. This is equivalent to calling
   `scale` with `MathContext.ofScale(0, roundingMode)`.
+
+* `abs(a: DecimalType): DecimalType`
+
+  Get the absolute value of a decimal number. The scale is kept, so `-1.50`
+  becomes `1.50`.
+
+* `negate(a: DecimalType): DecimalType`
+
+  Get a decimal number with its sign flipped. The scale is kept, so `1.50`
+  becomes `-1.50`.
 
 * `add(a: DecimalType, b: DecimalType, context?: MathContext): DecimalType`
 
@@ -216,9 +317,25 @@ import { operationHere, anotherOperation } from 'numeric-types/decimal';
   the decimal point and then removes trailing zeroes. A divisor of zero throws
   a `MathError`.
 
-Without a context, `add`, `subtract` and `multiply` are exact, and trailing
-zeroes are removed from the result. `0.50 + 0.50` is therefore `1` and not
-`1.00`. Pass a context when the result has to keep a specific shape.
+* `remainder(a: DecimalType, b: DecimalType, context?: MathContext): DecimalType`
+
+  Get what remains after `a` is divided by `b`. The division truncates towards
+  zero, so the remainder carries the sign of `a` and `10.5` divided by `3`
+  leaves `1.5`. The result is exact. A divisor of zero throws a `MathError`.
+
+* `pow(a: DecimalType, exponent: number, context?: MathContext): DecimalType`
+
+  Raise `a` to a whole power given as a regular number. A power of zero or
+  more is exact, and every number raised to zero is `1`.
+
+  A negative power is a division, so it needs a context that says how many
+  digits to keep. Without one it throws a `MathError`, and so does `0` raised
+  to a negative power.
+
+Without a context, `add`, `subtract`, `multiply`, `remainder` and `pow` are
+exact, and trailing zeroes are removed from the result. `0.50 + 0.50` is
+therefore `1` and not `1.00`. Pass a context when the result has to keep a
+specific shape.
 
 ## Type: Integer
 
@@ -285,9 +402,30 @@ import { operationHere, anotherOperation } from 'numeric-types/integer';
 
   Get if the integer `a` is greater than or equal to the number `b`.
 
+* `min(a: IntegerType, b: IntegerType): IntegerType`
+
+  Get the smaller of two integers. `a` is returned when they are equal.
+
+* `max(a: IntegerType, b: IntegerType): IntegerType`
+
+  Get the larger of two integers. `a` is returned when they are equal.
+
+* `isZero(a: IntegerType): boolean`
+
+  Get if an integer is zero.
+
+* `sign(a: IntegerType): -1 | 0 | 1`
+
+  Get the sign of an integer. Returns `-1` for a negative number, `0` for zero
+  and `1` for a positive number.
+
 * `toString(a: IntegerType): string`
 
   Turn a integers into its string representation.
+
+* `toNumber(a: IntegerType): number`
+
+  Get the nearest `number` to an integer.
 
 * `add(a: IntegerType, b: IntegerType): IntegerType`
 
@@ -318,9 +456,23 @@ import { operationHere, anotherOperation } from 'numeric-types/integer';
   Raise `a` to the power of `b`. The exponent must not be negative, as a
   negative exponent describes a fraction.
 
+* `pow(a: IntegerType, exponent: number): IntegerType`
+
+  Raise `a` to a whole power given as a regular number. This is
+  `exponentiate` with an exponent that does not have to be built as an integer
+  first. The exponent must not be negative.
+
+* `abs(a: IntegerType): IntegerType`
+
+  Get the absolute value of the integer.
+
+* `negate(a: IntegerType): IntegerType`
+
+  Get the integer with its sign flipped.
+
 * `unaryMinus(a: IntegerType): IntegerType`
 
-  Get the negated integer.
+  Another name for `negate`, which the decimal types use as well.
 
 ### Bitwise operations
 

@@ -146,4 +146,11 @@ export interface DecimalSPI<C, D extends AbstractDecimal<C>> {
 	 * @param a
 	 */
 	absolute(a: C): C;
+
+	/**
+	 * Get the number with its sign flipped.
+	 *
+	 * @param a
+	 */
+	negate(a: C): C;
 }

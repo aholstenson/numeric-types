@@ -1,8 +1,11 @@
-import { BigInteger, remainder, compare, add, subtract, divide, multiply, exponentiate, unaryMinus } from '../integer/index.js';
+import { MathError } from '../MathError.js';
+
+import { BigInteger, remainder, compare, add, subtract, divide, multiply, exponentiate, abs, negate } from '../integer/index.js';
 
 import { AbstractDecimal } from './AbstractDecimal.js';
+import type { Decimal } from './Decimal.js';
 import type { DecimalSPI } from './DecimalSPI.js';
-import { SPI } from './ops/symbols.js';
+import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols.js';
 
 import { convertNumber } from './ops/convertNumber.js';
 import { convertString } from './ops/convertString.js';
@@ -23,6 +26,42 @@ export class BigDecimal extends AbstractDecimal<BigInteger> {
 
 	public static parse(input: string): BigDecimal {
 		return convertString(BigDecimal[SPI], input);
+	}
+
+	/**
+	 * Create a decimal from a `bigint`. The result has no digits after the
+	 * decimal point.
+	 */
+	public static fromBigInt(a: bigint): BigDecimal {
+		return new BigDecimal(BigInteger.fromBigInt(a), 0);
+	}
+
+	/**
+	 * Create a decimal from a `Decimal`, keeping its scale. Every `Decimal`
+	 * fits, so this conversion never fails.
+	 */
+	public static fromDecimal(a: Decimal): BigDecimal {
+		/*
+		 * Both decimal types are an `AbstractDecimal`, so the check looks at
+		 * the coefficient. Only `Decimal` keeps that as a `number`.
+		 */
+		if(! (a instanceof AbstractDecimal) || typeof a[COEFFICIENT] !== 'number') {
+			throw new MathError('Expected a Decimal');
+		}
+
+		return new BigDecimal(BigInteger.fromNumber(a[COEFFICIENT]), a[EXPONENT]);
+	}
+
+	/**
+	 * Create a decimal from a `BigInteger`. The result has no digits after the
+	 * decimal point.
+	 */
+	public static fromBigInteger(a: BigInteger): BigDecimal {
+		if(! (a instanceof BigInteger)) {
+			throw new MathError('Expected a BigInteger');
+		}
+
+		return new BigDecimal(a, 0);
 	}
 }
 
@@ -101,10 +140,10 @@ BigDecimal[SPI] = {
 	},
 
 	absolute(a) {
-		if(compare(a, ZERO) < 0) {
-			return unaryMinus(a);
-		}
+		return abs(a);
+	},
 
-		return a;
+	negate(a) {
+		return negate(a);
 	}
 };
