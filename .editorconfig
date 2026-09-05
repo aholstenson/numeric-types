@@ -12,7 +12,16 @@ trim_trailing_whitespace = false
 indent_style = space
 indent_size = 2
 
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
 [package.json]
+indent_style = space
+indent_size = 2
+
+# Release Please rewrites these with two-space indentation.
+[{release-please-config.json,.release-please-manifest.json}]
 indent_style = space
 indent_size = 2
 

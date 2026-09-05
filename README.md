@@ -11,7 +11,7 @@ and TypeScript.
 npm install numeric-types
 ```
 
-This is an ES module package and it needs Node 20 or later. Use `import` to
+This is an ES module package and it needs Node 22 or later. Use `import` to
 load it. Node 22.12 and later can also load it with `require`.
 
 ## Features and status
@@ -564,3 +564,18 @@ throws a `MathError`.
 
   Shift the integer to the right by the given number of bits, keeping its
   sign.
+
+## Releasing
+
+Releases are automatic. Commit to `master` with [Conventional
+Commits](https://www.conventionalcommits.org/) messages. Release Please then
+keeps a release pull request open with the next version and the changelog
+entries. Merge that pull request to tag the release and publish the package to
+npm.
+
+The npm publish uses [trusted
+publishing](https://docs.npmjs.com/trusted-publishers/), so there is no npm
+token in this repository. The publish job gets a short-lived credential from
+npm with an OpenID Connect token. The trusted publisher on npmjs.com is set to
+this repository and to the workflow file `release.yml`. If you move or rename
+that workflow, change the trusted publisher settings at the same time.

@@ -47,7 +47,7 @@
   ],
   "sideEffects": false,
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "ts-custom-error": "^3.3.1"
