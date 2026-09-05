@@ -10,5 +10,5 @@ import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols.js';
 export function abs<D extends AbstractDecimal<any>>(a: D): D {
 	const spi = a[SPI];
 
-	return spi.newInstance(spi.absolute(a[COEFFICIENT]), a[EXPONENT]);
+	return spi.create(spi.ops.absolute(a[COEFFICIENT]), a[EXPONENT]);
 }

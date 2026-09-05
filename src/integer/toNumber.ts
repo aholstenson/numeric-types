@@ -8,8 +8,5 @@ import { VALUE, SPI } from './ops/symbols.js';
  * @param a
  */
 export function toNumber<I extends AbstractInteger<any>>(a: I): number {
-	const spi = a[SPI];
-
-	const aValue = a[VALUE];
-	return spi.toNumber(aValue);
+	return a[SPI].ops.toNumber(a[VALUE]);
 }

@@ -1,6 +1,8 @@
-import { EXPONENT, COEFFICIENT } from './symbols.js';
+import type { NumericOps } from '../../spi/NumericOps.js';
+
 import { AbstractDecimal } from '../AbstractDecimal.js';
-import type { DecimalSPI } from '../DecimalSPI.js';
+
+import { EXPONENT, COEFFICIENT } from './symbols.js';
 
 /*
  * Limits that decide when the plain base-10 form gives way to e-notation.
@@ -22,12 +24,12 @@ const MIN_POINT_POSITION = -5;
  * `1.2e+30`. Both forms keep every digit of the value and its scale, so the
  * string reads back as the same decimal.
  */
-export function toStringOp<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, a: D): string {
+export function toStringOp<C>(ops: NumericOps<C>, a: AbstractDecimal<C>): string {
 	const exponent = a[EXPONENT];
 	const coefficient = a[COEFFICIENT];
 
 	// Start with non-negative string representation
-	const digits = spi.toString(spi.absolute(coefficient));
+	const digits = ops.toString(ops.absolute(coefficient));
 
 	/*
 	 * Where the decimal point falls within the digits. A position larger than
@@ -66,7 +68,7 @@ export function toStringOp<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D
 	}
 
 	// Check if a - needs to be added
-	return spi.isNegative(coefficient)
+	return ops.isNegative(coefficient)
 		? '-' + value
 		: value;
 }

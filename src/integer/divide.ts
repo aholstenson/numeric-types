@@ -15,15 +15,11 @@ export function divide<I extends AbstractInteger<any>>(a: I, b: I): I {
 	validateCompatible(a, b);
 
 	const spi = a[SPI];
-
-	const aValue = a[VALUE];
 	const bValue = b[VALUE];
 
-	if(spi.isZero(bValue)) {
+	if(spi.ops.isZero(bValue)) {
 		throw new MathError('Division by zero');
 	}
 
-	const r = spi.divide(aValue, bValue);
-
-	return spi.newInstance(r);
+	return spi.create(spi.ops.divide(a[VALUE], bValue));
 }

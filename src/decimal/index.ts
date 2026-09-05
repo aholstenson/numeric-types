@@ -3,6 +3,7 @@
 export * from './AbstractDecimal.js';
 export * from './Decimal.js';
 export * from './BigDecimal.js';
+export * from './DecimalSPI.js';
 
 // Basic operations
 export * from './compare.js';

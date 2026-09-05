@@ -1,4 +1,4 @@
-import { MathError } from '../../MathError.js';
+import { MathError } from '../MathError.js';
 
 const PATTERN = /^[-+]?\d+$/;
 
@@ -6,7 +6,8 @@ const PATTERN = /^[-+]?\d+$/;
  * Check that a string describes a whole number, and return it without the
  * surrounding whitespace.
  *
- * Both integer types use this, so that they accept and reject the same input.
+ * Every implementation uses this, so that they accept and reject the same
+ * input.
  *
  * @param input
  *   the string to check

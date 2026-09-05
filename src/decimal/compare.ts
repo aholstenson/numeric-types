@@ -1,3 +1,5 @@
+import { derivedComparisons } from '../spi/ordering.js';
+
 import { AbstractDecimal } from './AbstractDecimal.js';
 import { validateCompatible } from './validateCompatible.js';
 import { SPI } from './ops/symbols.js';
@@ -12,55 +14,13 @@ import { compareOp } from './ops/compareOp.js';
  */
 export function compare<D extends AbstractDecimal<any>>(a: D, b: D): -1 | 0 | 1 {
 	validateCompatible(a, b);
-	return compareOp(a[SPI], a, b);
+	return compareOp(a[SPI].ops, a, b);
 }
 
-/**
- * Get if the given decimal numbers are equal.
- *
- * @param a
- * @param b
- */
-export function isEqual<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
-	return compare(a, b) === 0;
-}
-
-/**
- * Get if the first decimal number is less than the second one.
- *
- * @param a
- * @param b
- */
-export function isLessThan<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
-	return compare(a, b) < 0;
-}
-
-/**
- * Get if the first decimal number is less than or equal to the second one.
- *
- * @param a
- * @param b
- */
-export function isLessThanOrEqual<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
-	return compare(a, b) <= 0;
-}
-
-/**
- * Get if the first decimal number is greater than the second one.
- *
- * @param a
- * @param b
- */
-export function isGreaterThan<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
-	return compare(a, b) > 0;
-}
-
-/**
- * Get if the first decimal number is greater than or equal to the second one.
- *
- * @param a
- * @param b
- */
-export function isGreaterThanOrEqual<D extends AbstractDecimal<any>>(a: D, b: D): boolean {
-	return compare(a, b) >= 0;
-}
+export const {
+	isEqual,
+	isLessThan,
+	isLessThanOrEqual,
+	isGreaterThan,
+	isGreaterThanOrEqual
+} = derivedComparisons<AbstractDecimal<any>>(compare);

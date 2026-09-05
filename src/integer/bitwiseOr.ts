@@ -12,10 +12,5 @@ export function bitwiseOr<I extends AbstractInteger<any>>(a: I, b: I): I {
 	validateCompatible(a, b);
 
 	const spi = a[SPI];
-
-	const aValue = a[VALUE];
-	const bValue = b[VALUE];
-	const r = spi.bitwiseOr(aValue, bValue);
-
-	return spi.newInstance(r);
+	return spi.create(spi.ops.bitwiseOr(a[VALUE], b[VALUE]));
 }

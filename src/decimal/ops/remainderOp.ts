@@ -1,9 +1,9 @@
-import { AbstractDecimal } from '../AbstractDecimal.js';
-import type { DecimalSPI } from '../DecimalSPI.js';
-
 import { MathContext } from '../../MathContext.js';
 import { MathError } from '../../MathError.js';
 import { RoundingMode } from '../../RoundingMode.js';
+
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
 import { EXPONENT, COEFFICIENT } from './symbols.js';
 import { rescaleCoefficient, rescaleCoefficientAndExponent } from './rescalingOp.js';
@@ -18,7 +18,9 @@ export function remainderOp<C, D extends AbstractDecimal<C>>(
 	b: D,
 	context?: MathContext
 ): D {
-	if(spi.isZero(b[COEFFICIENT])) {
+	const ops = spi.ops;
+
+	if(ops.isZero(b[COEFFICIENT])) {
 		throw new MathError('Division by zero');
 	}
 
@@ -33,10 +35,10 @@ export function remainderOp<C, D extends AbstractDecimal<C>>(
 	 * The target exponent is the smaller one, so both coefficients only grow
 	 * and the rounding mode is never reached.
 	 */
-	const aCoefficient = rescaleCoefficient(spi, a[COEFFICIENT], a[EXPONENT], exponent, RoundingMode.Unnecessary);
-	const bCoefficient = rescaleCoefficient(spi, b[COEFFICIENT], b[EXPONENT], exponent, RoundingMode.Unnecessary);
+	const aCoefficient = rescaleCoefficient(ops, a[COEFFICIENT], a[EXPONENT], exponent, RoundingMode.Unnecessary);
+	const bCoefficient = rescaleCoefficient(ops, b[COEFFICIENT], b[EXPONENT], exponent, RoundingMode.Unnecessary);
 
-	const coefficient = spi.remainder(aCoefficient, bCoefficient);
+	const coefficient = ops.remainder(aCoefficient, bCoefficient);
 
 	return rescaleCoefficientAndExponent(spi, coefficient, exponent, context);
 }

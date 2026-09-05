@@ -8,12 +8,12 @@ import { SPI, COEFFICIENT } from './ops/symbols.js';
  * @param a
  */
 export function sign<D extends AbstractDecimal<any>>(a: D): -1 | 0 | 1 {
-	const spi = a[SPI];
+	const ops = a[SPI].ops;
 
 	const coefficient = a[COEFFICIENT];
-	if(spi.isZero(coefficient)) {
+	if(ops.isZero(coefficient)) {
 		return 0;
 	}
 
-	return spi.isNegative(coefficient) ? -1 : 1;
+	return ops.isNegative(coefficient) ? -1 : 1;
 }

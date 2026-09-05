@@ -7,5 +7,5 @@ import { VALUE, SPI } from './ops/symbols.js';
  * @param a
  */
 export function isZero<I extends AbstractInteger<any>>(a: I): boolean {
-	return a[SPI].isZero(a[VALUE]);
+	return a[SPI].ops.isZero(a[VALUE]);
 }

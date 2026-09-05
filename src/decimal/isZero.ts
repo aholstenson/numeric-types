@@ -8,5 +8,5 @@ import { SPI, COEFFICIENT } from './ops/symbols.js';
  * @param a
  */
 export function isZero<D extends AbstractDecimal<any>>(a: D): boolean {
-	return a[SPI].isZero(a[COEFFICIENT]);
+	return a[SPI].ops.isZero(a[COEFFICIENT]);
 }

@@ -1,11 +1,11 @@
+import { MathContext, hasScaleOrPrecision, DEFAULT_DIVISION_SCALE } from '../../MathContext.js';
+import { MathError } from '../../MathError.js';
+import { RoundingMode } from '../../RoundingMode.js';
+
 import { AbstractDecimal } from '../AbstractDecimal.js';
 import type { DecimalSPI } from '../DecimalSPI.js';
 
 import { EXPONENT, COEFFICIENT } from './symbols.js';
-import { MathContext, hasScaleOrPrecision } from '../../MathContext.js';
-import { MathError } from '../../MathError.js';
-import { RoundingMode } from '../../RoundingMode.js';
-
 import { round } from './round.js';
 import { applyPrecision, reduce, validatePrecision } from './rescalingOp.js';
 
@@ -13,8 +13,7 @@ import { applyPrecision, reduce, validatePrecision } from './rescalingOp.js';
  * Divide a decimal value by another one.
  *
  * The context decides how many digits the result keeps. Without a scale or a
- * precision the result is calculated at the default exponent of the type and
- * then reduced.
+ * precision the result is calculated at the default scale and then reduced.
  */
 export function divideOp<C, D extends AbstractDecimal<C>>(
 	spi: DecimalSPI<C, D>,
@@ -22,25 +21,27 @@ export function divideOp<C, D extends AbstractDecimal<C>>(
 	b: D,
 	context: MathContext
 ): D {
-	if(spi.isZero(b[COEFFICIENT])) {
+	const ops = spi.ops;
+
+	if(ops.isZero(b[COEFFICIENT])) {
 		throw new MathError('Division by zero');
 	}
 
-	if(spi.isZero(a[COEFFICIENT])) {
+	if(ops.isZero(a[COEFFICIENT])) {
 		/*
 		 * Zero divided by any number is zero, but the result still has to
 		 * carry the scale that was asked for.
 		 */
 		return typeof context.scale === 'undefined'
-			? spi.DECIMAL_ZERO
-			: spi.newInstance(spi.wrap(0), - context.scale);
+			? spi.ZERO
+			: spi.create(ops.ZERO, - context.scale);
 	}
 
 	const exponent = calculateDivisionExponent(spi, a, b, context);
 	const result = divideAtExponent(spi, a, b, exponent, context.roundingMode);
 
 	if(! hasScaleOrPrecision(context)) {
-		// The default exponent leaves trailing zeroes that carry no meaning.
+		// The default scale leaves trailing zeroes that carry no meaning.
 		return reduce(spi, result.coefficient, exponent);
 	}
 
@@ -69,10 +70,12 @@ function calculateDivisionExponent<C, D extends AbstractDecimal<C>>(
 	}
 
 	if(typeof context.precision === 'undefined') {
-		return spi.DEFAULT_EXPONENT;
+		return - DEFAULT_DIVISION_SCALE;
 	}
 
 	validatePrecision(context.precision);
+
+	const ops = spi.ops;
 
 	/*
 	 * A value sits between `10^(magnitude-1)` and `10^magnitude`, where the
@@ -80,8 +83,8 @@ function calculateDivisionExponent<C, D extends AbstractDecimal<C>>(
 	 * quotient is the difference between the two magnitudes, or one more
 	 * than that.
 	 */
-	const magnitude = (a[EXPONENT] + spi.digits(a[COEFFICIENT]))
-		- (b[EXPONENT] + spi.digits(b[COEFFICIENT]));
+	const magnitude = (a[EXPONENT] + ops.digits(a[COEFFICIENT]))
+		- (b[EXPONENT] + ops.digits(b[COEFFICIENT]));
 
 	const estimate = magnitude - context.precision;
 
@@ -91,11 +94,11 @@ function calculateDivisionExponent<C, D extends AbstractDecimal<C>>(
 	 * twice.
 	 */
 	const trial = divideAtExponent(spi, a, b, estimate, RoundingMode.Down).coefficient;
-	if(spi.isZero(trial)) {
+	if(ops.isZero(trial)) {
 		return estimate;
 	}
 
-	return estimate + spi.digits(trial) - context.precision;
+	return estimate + ops.digits(trial) - context.precision;
 }
 
 /**
@@ -120,6 +123,8 @@ function divideAtExponent<C, D extends AbstractDecimal<C>>(
 	exponent: number,
 	roundingMode: RoundingMode
 ): DivisionResult<C> {
+	const ops = spi.ops;
+
 	/*
 	 * `a / b` is `(ca / cb) * 10^(ea - eb)`. To land on the requested
 	 * exponent the difference has to be moved into the fraction, either by
@@ -131,16 +136,16 @@ function divideAtExponent<C, D extends AbstractDecimal<C>>(
 	let denominator = b[COEFFICIENT];
 
 	if(shift > 0) {
-		numerator = spi.multiply(numerator, spi.exponentiate(spi.TEN, spi.wrap(shift)));
+		numerator = ops.multiply(numerator, ops.exponentiate(ops.TEN, ops.fromNumber(shift)));
 	} else if(shift < 0) {
-		denominator = spi.multiply(denominator, spi.exponentiate(spi.TEN, spi.wrap(-shift)));
+		denominator = ops.multiply(denominator, ops.exponentiate(ops.TEN, ops.fromNumber(-shift)));
 	}
 
-	const quotient = spi.divide(numerator, denominator);
-	const remainder = spi.remainder(numerator, denominator);
+	const quotient = ops.divide(numerator, denominator);
+	const remainder = ops.remainder(numerator, denominator);
 
 	return {
-		coefficient: round(spi, roundingMode, quotient, remainder, denominator),
-		exact: spi.isZero(remainder)
+		coefficient: round(ops, roundingMode, quotient, remainder, denominator),
+		exact: ops.isZero(remainder)
 	};
 }

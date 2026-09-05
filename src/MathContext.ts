@@ -1,5 +1,12 @@
 import { RoundingMode } from './RoundingMode.js';
 
+/**
+ * Number of digits kept after the decimal point by a division that is given
+ * neither a scale nor a precision. Trailing zeroes are removed afterwards, so
+ * this is an upper limit and not the scale of the result.
+ */
+export const DEFAULT_DIVISION_SCALE = 5;
+
 export class MathContext {
 	public readonly roundingMode: RoundingMode;
 

@@ -1,7 +1,7 @@
+import { MathContext } from '../../MathContext.js';
+
 import { AbstractDecimal } from '../AbstractDecimal.js';
 import type { DecimalSPI } from '../DecimalSPI.js';
-
-import { MathContext } from '../../MathContext.js';
 
 import { EXPONENT, COEFFICIENT } from './symbols.js';
 import { rescaleCoefficientAndExponent } from './rescalingOp.js';
@@ -18,6 +18,8 @@ export function addOp<C, D extends AbstractDecimal<C>>(
 	b: D,
 	context?: MathContext
 ): D {
+	const ops = spi.ops;
+
 	const aExp = a[EXPONENT];
 	const bExp = b[EXPONENT];
 	const diff = aExp - bExp;
@@ -26,17 +28,17 @@ export function addOp<C, D extends AbstractDecimal<C>>(
 	let exponent;
 	if(diff === 0) {
 		// The same exponent results a simple add between the coefficients
-		coefficient = spi.add(a[COEFFICIENT], b[COEFFICIENT]);
+		coefficient = ops.add(a[COEFFICIENT], b[COEFFICIENT]);
 		exponent = aExp;
 	} else if(diff > 0) {
 		// Need to align the coefficients and a's exponent is bigger
-		const alignedA = spi.multiply(a[COEFFICIENT], spi.exponentiate(spi.TEN, spi.wrap(diff)));
-		coefficient = spi.add(alignedA, b[COEFFICIENT]);
+		const alignedA = ops.multiply(a[COEFFICIENT], ops.exponentiate(ops.TEN, ops.fromNumber(diff)));
+		coefficient = ops.add(alignedA, b[COEFFICIENT]);
 		exponent = bExp;
 	} else {
 		// Need to align the coefficients and b's exponent is bigger
-		const alignedB = spi.multiply(b[COEFFICIENT], spi.exponentiate(spi.TEN, spi.wrap(-diff)));
-		coefficient = spi.add(a[COEFFICIENT], alignedB);
+		const alignedB = ops.multiply(b[COEFFICIENT], ops.exponentiate(ops.TEN, ops.fromNumber(-diff)));
+		coefficient = ops.add(a[COEFFICIENT], alignedB);
 		exponent = aExp;
 	}
 

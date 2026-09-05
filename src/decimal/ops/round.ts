@@ -1,9 +1,6 @@
 import { MathError } from '../../MathError.js';
-
-import { AbstractDecimal } from '../AbstractDecimal.js';
-import type { DecimalSPI } from '../DecimalSPI.js';
-
 import { RoundingMode } from '../../RoundingMode.js';
+import type { NumericOps } from '../../spi/NumericOps.js';
 
 /**
  * Round the result of a division that truncates towards zero.
@@ -19,7 +16,8 @@ import { RoundingMode } from '../../RoundingMode.js';
  * the quotient itself, which lies towards zero, and the quotient moved one
  * step away from zero. This function selects one of them.
  *
- * @param spi
+ * @param ops
+ *   the arithmetic of the coefficient
  * @param mode
  *   the rounding mode to apply
  * @param quotient
@@ -29,14 +27,14 @@ import { RoundingMode } from '../../RoundingMode.js';
  * @param divisor
  *   the divisor that was used, needed to measure how large the remainder is
  */
-export function round<C, D extends AbstractDecimal<C>>(
-	spi: DecimalSPI<C, D>,
+export function round<C>(
+	ops: NumericOps<C>,
 	mode: RoundingMode,
 	quotient: C,
 	remainder: C,
 	divisor: C
 ): C {
-	if(spi.isZero(remainder)) {
+	if(ops.isZero(remainder)) {
 		/*
 		 * The value is exact, so both neighbors are the same and no rounding
 		 * is needed.
@@ -53,7 +51,7 @@ export function round<C, D extends AbstractDecimal<C>>(
 	 * The quotient can not be used for this, as it is zero for every value
 	 * between -1 and 1.
 	 */
-	const isNegative = spi.isNegative(remainder) !== spi.isNegative(divisor);
+	const isNegative = ops.isNegative(remainder) !== ops.isNegative(divisor);
 
 	let awayFromZero: boolean;
 	switch(mode) {
@@ -81,8 +79,8 @@ export function round<C, D extends AbstractDecimal<C>>(
 			 * nearest neighbor. Doubling avoids a division, and it stays
 			 * exact for both coefficient types.
 			 */
-			const doubled = spi.multiply(spi.absolute(remainder), spi.wrap(2));
-			const distance = spi.compare(doubled, spi.absolute(divisor));
+			const doubled = ops.multiply(ops.absolute(remainder), ops.TWO);
+			const distance = ops.compare(doubled, ops.absolute(divisor));
 
 			if(distance < 0) {
 				// The neighbor towards zero is nearer.
@@ -98,7 +96,7 @@ export function round<C, D extends AbstractDecimal<C>>(
 				awayFromZero = true;
 			} else {
 				// Both neighbors are equidistant, so keep the even one.
-				awayFromZero = ! spi.isMultipleOf(quotient, spi.wrap(2));
+				awayFromZero = ! ops.isMultipleOf(quotient, ops.TWO);
 			}
 			break;
 		}
@@ -111,6 +109,6 @@ export function round<C, D extends AbstractDecimal<C>>(
 	}
 
 	return isNegative
-		? spi.subtract(quotient, spi.ONE)
-		: spi.add(quotient, spi.ONE);
+		? ops.subtract(quotient, ops.ONE)
+		: ops.add(quotient, ops.ONE);
 }

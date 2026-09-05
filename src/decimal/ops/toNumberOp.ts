@@ -1,15 +1,17 @@
-import { EXPONENT, COEFFICIENT } from './symbols.js';
+import type { NumericOps } from '../../spi/NumericOps.js';
+
 import { AbstractDecimal } from '../AbstractDecimal.js';
-import type { DecimalSPI } from '../DecimalSPI.js';
+
+import { EXPONENT, COEFFICIENT } from './symbols.js';
 
 /**
  * Operation that converts a decimal into the nearest `number`.
  */
-export function toNumberOp<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, a: D): number {
+export function toNumberOp<C>(ops: NumericOps<C>, a: AbstractDecimal<C>): number {
 	/*
 	 * The number parser of JavaScript reads e-notation, so the coefficient and
 	 * the exponent are handed over as they are. A large exponent therefore
 	 * never builds the zeroes that the base-10 form would need.
 	 */
-	return Number(spi.toString(a[COEFFICIENT]) + 'e' + a[EXPONENT]);
+	return Number(ops.toString(a[COEFFICIENT]) + 'e' + a[EXPONENT]);
 }

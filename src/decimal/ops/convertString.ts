@@ -21,7 +21,7 @@ export function convertString<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C
 	const integer = data[1];
 	const fraction = data[2] || '';
 	// The coefficient is the part before the dot combined with the fraction
-	const coefficient = spi.parseInt(integer + fraction);
+	const coefficient = spi.ops.parse(integer + fraction);
 
 	/*
 	 * The exponent takes into account the e-part of the string and also
@@ -30,5 +30,5 @@ export function convertString<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C
 	let exponent = data[3] ? Number.parseInt(data[3], 10) : 0;
 	exponent -= fraction.length;
 
-	return spi.newInstance(coefficient, exponent);
+	return spi.create(coefficient, exponent);
 }

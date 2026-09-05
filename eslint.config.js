@@ -11,11 +11,8 @@ export default tseslint.config(
 
 	{
 		rules: {
-			// The SPI types are intentionally loose about their coefficient type.
+			// The operations are intentionally loose about their value type.
 			'@typescript-eslint/no-explicit-any': 'off',
-
-			// The SPI lookup on `this.constructor` needs a suppression comment.
-			'@typescript-eslint/ban-ts-comment': 'off',
 
 			'prefer-const': 'warn',
 			'no-console': 'error',

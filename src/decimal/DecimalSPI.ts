@@ -1,156 +1,61 @@
-import { AbstractDecimal } from './AbstractDecimal.js';
+import type { NumericOps } from '../spi/NumericOps.js';
+
+import type { AbstractDecimal } from './AbstractDecimal.js';
 
 /**
- * Service Provider Interface for supporting a decimal implementation. This
- * SPI abstract away common operations on different types of coefficients.
+ * What a decimal type supplies to the operations: the arithmetic that its
+ * coefficient uses, and a way to build a new instance of the type.
+ *
+ * A decimal is a whole coefficient and a base-10 exponent, so the arithmetic
+ * it needs is the same arithmetic that the integer types use. `Decimal` uses
+ * `numberOps` and `BigDecimal` uses `bigIntOps`.
  */
 export interface DecimalSPI<C, D extends AbstractDecimal<C>> {
 
-	DECIMAL_ZERO: D;
-	DECIMAL_ONE: D;
-
-	DEFAULT_EXPONENT: number;
-
-	ONE: C;
-
-	TEN: C;
+	/**
+	 * The arithmetic that coefficients of this type use.
+	 */
+	readonly ops: NumericOps<C>;
 
 	/**
-	 * Create a new instance of the decimal.
+	 * Create an instance of the type from a coefficient and an exponent. The
+	 * value it describes is `coefficient * 10 ^ exponent`.
 	 *
 	 * @param coefficient
-	 *   the coefficient data
 	 * @param exponent
-	 *   exponents as number
 	 */
-	newInstance(coefficient: C, exponent: number): D;
+	create(coefficient: C, exponent: number): D;
 
 	/**
-	 * Check if the given value represents zero.
-	 *
-	 * @param a
+	 * The value zero, without digits after the decimal point.
 	 */
-	isZero(a: C): boolean;
+	readonly ZERO: D;
 
 	/**
-	 * Get if one number is a multiple of another. Multiples are such numbers
-	 * where the remainder of a division would be zero.
-	 *
-	 * @param a
-	 *   number that should be a multiple of `b`
-	 * @param b
-	 *   number that should be fully divisible within `a`
+	 * The value one, without digits after the decimal point.
 	 */
-	isMultipleOf(a: C, b: C): boolean;
+	readonly ONE: D;
+}
 
-	/**
-	 * Get if the given number is negative.
-	 *
-	 * @param a
-	 */
-	isNegative(a: C): boolean;
+/**
+ * Build the SPI of a decimal type from the two parts that it decides, which
+ * are the arithmetic of its coefficient and its constructor. The constants
+ * follow from those two.
+ *
+ * @param ops
+ *   the arithmetic that coefficients use
+ * @param create
+ *   function that builds an instance from a coefficient and an exponent
+ */
+export function defineDecimal<C, D extends AbstractDecimal<C>>(
+	ops: NumericOps<C>,
+	create: (coefficient: C, exponent: number) => D
+): DecimalSPI<C, D> {
+	return {
+		ops,
+		create,
 
-	/**
-	 * Get the number of digits in the number, ignoring its sign. `100` returns
-	 * `3`, `-25` returns `2` and `0` returns `1`.
-	 *
-	 * @param a
-	 */
-	digits(a: C): number;
-
-	/**
-	 * Compare two numbers. Returns `0` if the values are numerically equal,
-	 * `-1` if `a` is less than `b` and `+1` if `a` is greater than `b`.
-	 *
-	 * @param a
-	 * @param b
-	 */
-	compare(a: C, b: C): -1 | 0 | 1;
-
-	/**
-	 * Parse an integer turning it into a number.
-	 *
-	 * @param input
-	 */
-	parseInt(input: string): C;
-
-	/**
-	 * Convert the given number to a string containing its base-10
-	 * representation.
-	 */
-	toString(a: C): string;
-
-	/**
-	 * Wrap a regular number into the opaque coefficient carrier.
-	 *
-	 * @param a
-	 */
-	wrap(a: number): C;
-
-	/**
-	 * Add two numbers together returning the result.
-	 *
-	 * @param a
-	 * @param b
-	 */
-	add(a: C, b: C): C;
-
-	/**
-	 * Subtract the number `b` from `a`.
-	 *
-	 * @param a
-	 *   the first number to be subtracted from
-	 * @param b
-	 *   the amount to subtract from the first number
-	 */
-	subtract(a: C, b: C): C;
-
-	/**
-	 * Multiply two numbers together.
-	 *
-	 * @param a
-	 * @param b
-	 */
-	multiply(a: C, b: C): C;
-
-	/**
-	 * Divide the first number with a divisor `b`, truncating the result
-	 * towards zero.
-	 *
-	 * @param a
-	 * @param b
-	 */
-	divide(a: C, b: C): C;
-
-	/**
-	 * Get the remainder of a division between the two numbers. The remainder
-	 * carries the sign of `a`, so that `divide` and `remainder` together
-	 * satisfy `divide(a, b) * b + remainder(a, b) === a`.
-	 *
-	 * @param a
-	 * @param b
-	 */
-	remainder(a: C, b: C): C;
-
-	/**
-	 * Exponentiate `a` with `b`.
-	 *
-	 * @param a
-	 * @param b
-	 */
-	exponentiate(a: C, b: C): C;
-
-	/**
-	 * Get the absolute value of a number.
-	 *
-	 * @param a
-	 */
-	absolute(a: C): C;
-
-	/**
-	 * Get the number with its sign flipped.
-	 *
-	 * @param a
-	 */
-	negate(a: C): C;
+		ZERO: create(ops.ZERO, 0),
+		ONE: create(ops.ONE, 0)
+	};
 }

@@ -34,6 +34,10 @@
       "types": "./dist/integer/index.d.ts",
       "default": "./dist/integer/index.js"
     },
+    "./spi": {
+      "types": "./dist/spi/index.d.ts",
+      "default": "./dist/spi/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",

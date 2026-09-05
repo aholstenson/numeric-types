@@ -226,7 +226,7 @@ function isSameValue(a: Exact, b: Exact): boolean {
  * them, so the trailing zeroes of a value such as `940` do not count.
  */
 function significantDigits<C>(value: AbstractDecimal<C>): number {
-	return value[SPI].digits(value[COEFFICIENT]);
+	return value[SPI].ops.digits(value[COEFFICIENT]);
 }
 
 /**

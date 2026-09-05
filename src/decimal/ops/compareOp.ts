@@ -1,40 +1,39 @@
+import { RoundingMode } from '../../RoundingMode.js';
+import type { NumericOps } from '../../spi/NumericOps.js';
+
 import { AbstractDecimal } from '../AbstractDecimal.js';
-import type { DecimalSPI } from '../DecimalSPI.js';
 
 import { EXPONENT, COEFFICIENT } from './symbols.js';
-
 import { rescaleCoefficient } from './rescalingOp.js';
-import { RoundingMode } from '../../RoundingMode.js';
 
 /**
+ * Operation that compares two decimals, ignoring the scale that they are
+ * written with.
  *
- * @param spi
+ * @param ops
+ *   the arithmetic of the coefficient
  * @param a
  * @param b
  */
-export function compareOp<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C, D>, a: D, b: D): -1 | 0 | 1 {
+export function compareOp<C>(ops: NumericOps<C>, a: AbstractDecimal<C>, b: AbstractDecimal<C>): -1 | 0 | 1 {
 	const aCoefficient = a[COEFFICIENT];
 	const bCoefficient = b[COEFFICIENT];
 
-	if(spi.isZero(aCoefficient) && spi.isZero(bCoefficient)) {
+	if(ops.isZero(aCoefficient) && ops.isZero(bCoefficient)) {
 		// If both numbers are zero
 		return 0;
 	}
 
-	const aNeg = spi.isNegative(aCoefficient);
-	const bNeg = spi.isNegative(bCoefficient);
+	const aNeg = ops.isNegative(aCoefficient);
+	const bNeg = ops.isNegative(bCoefficient);
 
 	if(aNeg !== bNeg) {
-		if(aNeg) {
-			return -1;
-		} else {
-			return 1;
-		}
+		return aNeg ? -1 : 1;
 	}
 
 	const baseExponent = Math.min(a[EXPONENT], b[EXPONENT]);
-	const aScaledCoefficient = rescaleCoefficient(spi, aCoefficient, a[EXPONENT], baseExponent, RoundingMode.Down);
-	const bScaledCoefficient = rescaleCoefficient(spi, bCoefficient, b[EXPONENT], baseExponent, RoundingMode.Down);
+	const aScaledCoefficient = rescaleCoefficient(ops, aCoefficient, a[EXPONENT], baseExponent, RoundingMode.Down);
+	const bScaledCoefficient = rescaleCoefficient(ops, bCoefficient, b[EXPONENT], baseExponent, RoundingMode.Down);
 
-	return spi.compare(aScaledCoefficient, bScaledCoefficient);
+	return ops.compare(aScaledCoefficient, bScaledCoefficient);
 }

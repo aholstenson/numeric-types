@@ -8,12 +8,12 @@ import { VALUE, SPI } from './ops/symbols.js';
  * @param a
  */
 export function sign<I extends AbstractInteger<any>>(a: I): -1 | 0 | 1 {
-	const spi = a[SPI];
+	const ops = a[SPI].ops;
 
-	const aValue = a[VALUE];
-	if(spi.isZero(aValue)) {
+	const value = a[VALUE];
+	if(ops.isZero(value)) {
 		return 0;
 	}
 
-	return spi.isNegative(aValue) ? -1 : 1;
+	return ops.isNegative(value) ? -1 : 1;
 }

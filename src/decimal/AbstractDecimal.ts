@@ -15,8 +15,9 @@ import { toNumber } from './toNumber.js';
  * coefficient * 10 ^ exponent
  * ```
  *
- * BaseDecimal is designed so that the exponent is always a `number` and
- * `coefficient` is a dense value that subclasses define.
+ * The exponent is always a `number`. The coefficient is a whole number held in
+ * a dense value that the subclass decides, together with the arithmetic that
+ * calculates with it.
  */
 export abstract class AbstractDecimal<C> {
 	public readonly [EXPONENT]: number;
@@ -26,6 +27,13 @@ export abstract class AbstractDecimal<C> {
 		this[EXPONENT] = exponent;
 		this[COEFFICIENT] = coefficient;
 	}
+
+	/**
+	 * The arithmetic and the factory of this decimal type. Every instance of a
+	 * type returns the same object, so two values can be used together when
+	 * this is the same for both of them.
+	 */
+	public abstract get [SPI](): DecimalSPI<C, this>;
 
 	public toString(): string {
 		return toString(this);
@@ -57,10 +65,5 @@ export abstract class AbstractDecimal<C> {
 	 */
 	public [Symbol.toPrimitive](hint: string): string | number {
 		return hint === 'number' ? this.toNumber() : this.toString();
-	}
-
-	public get [SPI](): DecimalSPI<C, this> {
-		// @ts-ignore
-		return this.constructor[SPI];
 	}
 }

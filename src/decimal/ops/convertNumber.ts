@@ -20,7 +20,7 @@ export function convertNumber<C, D extends AbstractDecimal<C>>(spi: DecimalSPI<C
 		 * handed over as it is instead of being written and read back as a
 		 * string. `-0` becomes `0`, as a coefficient carries no signed zero.
 		 */
-		return spi.newInstance(spi.wrap(n === 0 ? 0 : n), 0);
+		return spi.create(spi.ops.fromNumber(n === 0 ? 0 : n), 0);
 	}
 
 	/*

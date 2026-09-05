@@ -1,8 +1,8 @@
-import { AbstractDecimal } from '../AbstractDecimal.js';
-import type { DecimalSPI } from '../DecimalSPI.js';
-
 import { MathContext } from '../../MathContext.js';
 import { MathError } from '../../MathError.js';
+
+import { AbstractDecimal } from '../AbstractDecimal.js';
+import type { DecimalSPI } from '../DecimalSPI.js';
 
 import { EXPONENT, COEFFICIENT } from './symbols.js';
 import { divideOp } from './divideOp.js';
@@ -21,9 +21,11 @@ export function powOp<C, D extends AbstractDecimal<C>>(
 		throw new MathError('Exponent must be a safe whole number, got ' + exponent);
 	}
 
+	const ops = spi.ops;
+
 	if(exponent === 0) {
 		// Every value raised to zero is one, including zero itself.
-		return rescaleCoefficientAndExponent(spi, spi.ONE, 0, context);
+		return rescaleCoefficientAndExponent(spi, ops.ONE, 0, context);
 	}
 
 	if(exponent < 0) {
@@ -36,14 +38,14 @@ export function powOp<C, D extends AbstractDecimal<C>>(
 		}
 
 		const positivePower = powOp(spi, a, - exponent);
-		return divideOp(spi, spi.DECIMAL_ONE, positivePower, context);
+		return divideOp(spi, spi.ONE, positivePower, context);
 	}
 
 	/*
 	 * `(c * 10^e)^n` is `c^n * 10^(e*n)`, so both parts are raised on their
 	 * own and the result stays exact.
 	 */
-	const coefficient = spi.exponentiate(a[COEFFICIENT], spi.wrap(exponent));
+	const coefficient = ops.exponentiate(a[COEFFICIENT], ops.fromNumber(exponent));
 
 	return rescaleCoefficientAndExponent(spi, coefficient, a[EXPONENT] * exponent, context);
 }

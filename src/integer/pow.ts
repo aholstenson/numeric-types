@@ -19,14 +19,6 @@ export function pow<I extends AbstractInteger<any>>(a: I, exponent: number): I {
 		throw new MathError('Exponent must be a safe whole number, got ' + exponent);
 	}
 
-	if(exponent < 0) {
-		throw new MathError('Exponent can not be negative, received: ' + exponent);
-	}
-
 	const spi = a[SPI];
-
-	const aValue = a[VALUE];
-	const r = spi.exponentiate(aValue, spi.wrap(exponent));
-
-	return spi.newInstance(r);
+	return spi.create(spi.ops.exponentiate(a[VALUE], spi.ops.fromNumber(exponent)));
 }

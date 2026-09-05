@@ -10,5 +10,5 @@ import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols.js';
 export function negate<D extends AbstractDecimal<any>>(a: D): D {
 	const spi = a[SPI];
 
-	return spi.newInstance(spi.negate(a[COEFFICIENT]), a[EXPONENT]);
+	return spi.create(spi.ops.negate(a[COEFFICIENT]), a[EXPONENT]);
 }

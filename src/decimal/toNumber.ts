@@ -10,5 +10,5 @@ import { toNumberOp } from './ops/toNumberOp.js';
  * @param a
  */
 export function toNumber<D extends AbstractDecimal<any>>(a: D): number {
-	return toNumberOp(a[SPI], a);
+	return toNumberOp(a[SPI].ops, a);
 }

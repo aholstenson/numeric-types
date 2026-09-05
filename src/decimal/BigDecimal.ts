@@ -1,31 +1,35 @@
 import { MathError } from '../MathError.js';
 
-import { BigInteger, remainder, compare, add, subtract, divide, multiply, exponentiate, abs, negate } from '../integer/index.js';
+import { AbstractInteger } from '../integer/AbstractInteger.js';
+import { VALUE } from '../integer/ops/symbols.js';
+import type { BigInteger } from '../integer/BigInteger.js';
+
+import { bigIntOps } from '../spi/bigIntOps.js';
 
 import { AbstractDecimal } from './AbstractDecimal.js';
 import type { Decimal } from './Decimal.js';
-import type { DecimalSPI } from './DecimalSPI.js';
+import { defineDecimal, type DecimalSPI } from './DecimalSPI.js';
 import { SPI, EXPONENT, COEFFICIENT } from './ops/symbols.js';
 
 import { convertNumber } from './ops/convertNumber.js';
 import { convertString } from './ops/convertString.js';
 
 /**
- * Decimal implementation with near-unlimited precision.
+ * Decimal implementation with near-unlimited precision. The coefficient is a
+ * `bigint`, so the number of digits is limited only by the memory that is
+ * available.
  */
-export class BigDecimal extends AbstractDecimal<BigInteger> {
-	public static [SPI]: DecimalSPI<BigInteger, BigDecimal>;
-
-	constructor(coefficent: BigInteger, exponent: number) {
-		super(coefficent, exponent);
+export class BigDecimal extends AbstractDecimal<bigint> {
+	public get [SPI](): DecimalSPI<bigint, this> {
+		return spi as DecimalSPI<bigint, this>;
 	}
 
 	public static fromNumber(a: number): BigDecimal {
-		return convertNumber(BigDecimal[SPI], a);
+		return convertNumber(spi, a);
 	}
 
 	public static parse(input: string): BigDecimal {
-		return convertString(BigDecimal[SPI], input);
+		return convertString(spi, input);
 	}
 
 	/**
@@ -33,7 +37,11 @@ export class BigDecimal extends AbstractDecimal<BigInteger> {
 	 * decimal point.
 	 */
 	public static fromBigInt(a: bigint): BigDecimal {
-		return new BigDecimal(BigInteger.fromBigInt(a), 0);
+		if(typeof a !== 'bigint') {
+			throw new MathError('Can only be used with a bigint, received object with type ' + typeof a);
+		}
+
+		return new BigDecimal(a, 0);
 	}
 
 	/**
@@ -49,7 +57,7 @@ export class BigDecimal extends AbstractDecimal<BigInteger> {
 			throw new MathError('Expected a Decimal');
 		}
 
-		return new BigDecimal(BigInteger.fromNumber(a[COEFFICIENT]), a[EXPONENT]);
+		return new BigDecimal(BigInt(a[COEFFICIENT]), a[EXPONENT]);
 	}
 
 	/**
@@ -57,93 +65,19 @@ export class BigDecimal extends AbstractDecimal<BigInteger> {
 	 * decimal point.
 	 */
 	public static fromBigInteger(a: BigInteger): BigDecimal {
-		if(! (a instanceof BigInteger)) {
+		/*
+		 * Both integer types are an `AbstractInteger`, so the check looks at
+		 * the value. Only `BigInteger` keeps that as a `bigint`.
+		 */
+		if(! (a instanceof AbstractInteger) || typeof a[VALUE] !== 'bigint') {
 			throw new MathError('Expected a BigInteger');
 		}
 
-		return new BigDecimal(a, 0);
+		return new BigDecimal(a[VALUE], 0);
 	}
 }
 
-const ZERO = BigInteger.fromNumber(0);
-
-BigDecimal[SPI] = {
-	DECIMAL_ZERO: new BigDecimal(BigInteger.fromNumber(0), 0),
-
-	DECIMAL_ONE: new BigDecimal(BigInteger.fromNumber(1), 0),
-
-	ONE: BigInteger.fromNumber(1),
-
-	TEN: BigInteger.fromNumber(10),
-
-	DEFAULT_EXPONENT: -5,
-
-	newInstance(coefficent, exponent) {
-		return new BigDecimal(coefficent, exponent);
-	},
-
-	isZero(a) {
-		return compare(a, ZERO) === 0;
-	},
-
-	isMultipleOf(a, b) {
-		return compare(remainder(a, b), ZERO) === 0;
-	},
-
-	isNegative(a) {
-		return compare(a, ZERO) < 0;
-	},
-
-	compare(a, b) {
-		return compare(a, b);
-	},
-
-	parseInt(input) {
-		return BigInteger.parse(input);
-	},
-
-	digits(a) {
-		const value = a.toString();
-		return value.charAt(0) === '-' ? value.length - 1 : value.length;
-	},
-
-	toString(a) {
-		return a.toString();
-	},
-
-	wrap(a) {
-		return BigInteger.fromNumber(a);
-	},
-
-	add(a, b) {
-		return add(a, b);
-	},
-
-	subtract(a, b) {
-		return subtract(a, b);
-	},
-
-	multiply(a, b) {
-		return multiply(a, b);
-	},
-
-	divide(a, b) {
-		return divide(a, b);
-	},
-
-	remainder(a, b) {
-		return remainder(a, b);
-	},
-
-	exponentiate(a, b) {
-		return exponentiate(a, b);
-	},
-
-	absolute(a) {
-		return abs(a);
-	},
-
-	negate(a) {
-		return negate(a);
-	}
-};
+const spi = defineDecimal<bigint, BigDecimal>(
+	bigIntOps,
+	(coefficient, exponent) => new BigDecimal(coefficient, exponent)
+);

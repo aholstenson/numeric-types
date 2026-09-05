@@ -9,9 +9,5 @@ import { VALUE, SPI } from './ops/symbols.js';
  */
 export function signedRightShift<I extends AbstractInteger<any>>(a: I, amount: number): I {
 	const spi = a[SPI];
-
-	const aValue = a[VALUE];
-	const r = spi.signedRightShift(aValue, amount);
-
-	return spi.newInstance(r);
+	return spi.create(spi.ops.signedRightShift(a[VALUE], amount));
 }

@@ -11,8 +11,15 @@ export abstract class AbstractInteger<V> {
 		this[VALUE] = value;
 	}
 
+	/**
+	 * The arithmetic and the factory of this integer type. Every instance of a
+	 * type returns the same object, so two values can be used together when
+	 * this is the same for both of them.
+	 */
+	public abstract get [SPI](): IntegerSPI<V, this>;
+
 	public toString(): string {
-		return this[SPI].toString(this[VALUE]);
+		return this[SPI].ops.toString(this[VALUE]);
 	}
 
 	/**
@@ -20,7 +27,7 @@ export abstract class AbstractInteger<V> {
 	 * value, so a value outside the safe range of `number` loses digits.
 	 */
 	public toNumber(): number {
-		return this[SPI].toNumber(this[VALUE]);
+		return this[SPI].ops.toNumber(this[VALUE]);
 	}
 
 	/**
@@ -40,10 +47,5 @@ export abstract class AbstractInteger<V> {
 	 */
 	public [Symbol.toPrimitive](hint: string): string | number {
 		return hint === 'number' ? this.toNumber() : this.toString();
-	}
-
-	public get [SPI](): IntegerSPI<V, this> {
-		// @ts-ignore
-		return this.constructor[SPI];
 	}
 }
