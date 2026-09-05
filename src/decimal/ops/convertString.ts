@@ -3,7 +3,7 @@ import { MathError } from '../../MathError.js';
 import { AbstractDecimal } from '../AbstractDecimal.js';
 import type { DecimalSPI } from '../DecimalSPI.js';
 
-const PATTERN = /^([-+]?\d+)(?:\.(\d*))?(?:e([-+]?\d+))?$/;
+const PATTERN = /^([-+]?\d+)(?:\.(\d*))?(?:[eE]([-+]?\d+))?$/;
 
 /**
  * Operation that parses a string to a decimal.

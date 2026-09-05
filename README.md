@@ -57,10 +57,27 @@ imported. This design is to allow the library to take advantage of tree-shaking.
   Create an instance of the numeric type from a string. Whitespace around the
   value is ignored. Anything that is not a number in the form the type accepts
   is rejected, so `parse` never returns a value that is only part of the input.
+  The decimal types also accept e-notation, written with either `e` or `E`, so
+  `1.5e30` and `1.5E+30` are the same value.
 
 * `numericType.toString(): string`
 
   Turn the numeric type into a string representation that `parse` accepts.
+
+  A decimal is written in the plain form, such as `120` or `0.005`, while the
+  decimal point stays in the range that a `number` writes plainly, and in
+  e-notation outside of it. The switch happens at the same place as it does
+  for a `number`, so `1e21` is written as `1e+21` and `0.0000001` as `1e-7`.
+  E-notation also keeps a large exponent from building a very long string, as
+  `Decimal.parse('1e1000000')` is written with its exponent instead of a
+  million zeroes. Both forms keep every digit and the scale of the value.
+
+  ```javascript
+  Decimal.parse('1.50').toString();       // '1.50'
+  Decimal.parse('1e20').toString();       // '100000000000000000000'
+  Decimal.parse('1e21').toString();       // '1e+21'
+  Decimal.parse('1e1000000').toString();  // '1e+1000000'
+  ```
 
 * `numericType.toNumber(): number`
 
@@ -265,7 +282,9 @@ import { operationHere, anotherOperation } from 'numeric-types/decimal';
 
 * `toString(a: DecimalType): string`
 
-  Turn a decimal numbers into its string representation.
+  Turn a decimal numbers into its string representation, either in the plain
+  form or in e-notation. See `numericType.toString()` above for the form that
+  is used.
 
 * `toNumber(a: DecimalType): number`
 

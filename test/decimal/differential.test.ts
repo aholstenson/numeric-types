@@ -64,17 +64,18 @@ function pow10(n: number): bigint {
  * from the parsing that the library does.
  */
 function parseExact(input: string): Exact {
-	const match = /^(-?)(\d+)(?:\.(\d+))?$/.exec(input);
+	const match = /^(-?)(\d+)(?:\.(\d+))?(?:e([-+]?\d+))?$/.exec(input);
 	if(! match) {
-		throw new Error('Test input is not a plain decimal: ' + input);
+		throw new Error('Test input is not a decimal: ' + input);
 	}
 
 	const fraction = match[3] ?? '';
 	const digits = BigInt(match[2] + fraction);
+	const exponent = match[4] ? Number.parseInt(match[4], 10) : 0;
 
 	return {
 		coefficient: match[1] === '-' ? - digits : digits,
-		exponent: - fraction.length
+		exponent: exponent - fraction.length
 	};
 }
 

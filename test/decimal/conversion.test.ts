@@ -17,6 +17,63 @@ describe('Decimal', function() {
 	describe('Conversion', function() {
 		for(const [ name, parse ] of implementations) {
 			describe(name, function() {
+				describe('toString', function() {
+					/*
+					 * The plain form is used while the decimal point stays
+					 * within the range that a `number` writes plainly, and
+					 * e-notation takes over outside of it.
+					 */
+					const cases: [ string, string ][] = [
+						[ '0', '0' ],
+						[ '0.00', '0.00' ],
+						[ '1', '1' ],
+						[ '1.50', '1.50' ],
+						[ '-12.345', '-12.345' ],
+						[ '100', '100' ],
+						[ '1e2', '100' ],
+						[ '1e21', '1e+21' ],
+						[ '-1e21', '-1e+21' ],
+						[ '1.5e30', '1.5e+30' ],
+						[ '15e29', '1.5e+30' ],
+						[ '1e-6', '0.000001' ],
+						[ '1e-7', '1e-7' ],
+						[ '0.00000010', '1.0e-7' ],
+						[ '-1e-7', '-1e-7' ],
+						[ '0e-30', '0e-30' ]
+					];
+
+					for(const [ input, expected ] of cases) {
+						it(input + ' becomes ' + expected, function() {
+							expect(parse(input).toString()).toEqual(expected);
+						});
+
+						it(expected + ' reads back as the same string', function() {
+							expect(parse(expected).toString()).toEqual(expected);
+						});
+					}
+
+					/*
+					 * The last plain form. It is not read back here, as the
+					 * 21 digits of the string are more than the coefficient
+					 * of a `Decimal` can hold.
+					 */
+					it('1e20 becomes ' + '1' + '0'.repeat(20), function() {
+						expect(parse('1e20').toString()).toEqual('1' + '0'.repeat(20));
+					});
+
+					it('a large exponent does not build a long string', function() {
+						expect(parse('1e1000000').toString()).toEqual('1e+1000000');
+					});
+
+					it('a small exponent does not build a long string', function() {
+						expect(parse('1e-1000000').toString()).toEqual('1e-1000000');
+					});
+
+					it('an uppercase E is accepted when parsing', function() {
+						expect(parse('1.5E+30').toString()).toEqual('1.5e+30');
+					});
+				});
+
 				describe('toNumber', function() {
 					const cases: [ string, number ][] = [
 						[ '0', 0 ],
@@ -105,7 +162,7 @@ describe('Decimal', function() {
 				[ 'the smallest safe integer', Number.MIN_SAFE_INTEGER, '-9007199254740991' ],
 				[ '0.1', 0.1, '0.1' ],
 				[ '-1.25', -1.25, '-1.25' ],
-				[ '1e21', 1e21, '1' + '0'.repeat(21) ]
+				[ '1e21', 1e21, '1e+21' ]
 			];
 
 			for(const [ label, input, expected ] of cases) {
@@ -134,7 +191,7 @@ describe('Decimal', function() {
 
 			it('a BigDecimal with a large exponent becomes a Decimal', function() {
 				expect(Decimal.fromBigDecimal(BigDecimal.parse('1e30')).toString())
-					.toEqual('1' + '0'.repeat(30));
+					.toEqual('1e+30');
 			});
 
 			it('a BigDecimal with too many digits is rejected', function() {
@@ -188,7 +245,7 @@ describe('Decimal', function() {
 			it('a BigInteger becomes a BigDecimal', function() {
 				const value = BigInteger.parse('123456789012345678901234567890');
 				expect(BigDecimal.fromBigInteger(value).toString())
-					.toEqual('123456789012345678901234567890');
+					.toEqual('1.23456789012345678901234567890e+29');
 			});
 
 			it('fromBigInteger rejects an Integer', function() {
@@ -199,7 +256,7 @@ describe('Decimal', function() {
 
 			it('a bigint becomes a BigDecimal', function() {
 				expect(BigDecimal.fromBigInt(123456789012345678901234567890n).toString())
-					.toEqual('123456789012345678901234567890');
+					.toEqual('1.23456789012345678901234567890e+29');
 			});
 
 			it('a negative bigint becomes a BigDecimal', function() {
