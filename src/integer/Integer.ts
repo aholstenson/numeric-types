@@ -4,7 +4,7 @@ import { checkSafe, fromBigInt, numberOps } from '../spi/numberOps.js';
 
 import { AbstractInteger } from './AbstractInteger.js';
 import type { BigInteger } from './BigInteger.js';
-import type { IntegerSPI } from './IntegerSPI.js';
+import { defineInteger, type IntegerSPI } from './IntegerSPI.js';
 import { SPI, VALUE } from './ops/symbols.js';
 
 /**
@@ -18,6 +18,41 @@ export class Integer extends AbstractInteger<number> {
 
 	public get [SPI](): IntegerSPI<number, this> {
 		return spi as IntegerSPI<number, this>;
+	}
+
+	/**
+	 * The value zero.
+	 */
+	public static get ZERO(): Integer {
+		return spi.ZERO;
+	}
+
+	/**
+	 * The value one.
+	 */
+	public static get ONE(): Integer {
+		return spi.ONE;
+	}
+
+	/**
+	 * The value minus one.
+	 */
+	public static get MINUS_ONE(): Integer {
+		return spi.MINUS_ONE;
+	}
+
+	/**
+	 * The value two.
+	 */
+	public static get TWO(): Integer {
+		return spi.TWO;
+	}
+
+	/**
+	 * The value ten, which is the base that decimal exponents use.
+	 */
+	public static get TEN(): Integer {
+		return spi.TEN;
 	}
 
 	/**
@@ -55,10 +90,7 @@ export class Integer extends AbstractInteger<number> {
 	}
 }
 
-const spi: IntegerSPI<number, Integer> = {
-	ops: numberOps,
-
-	create(value) {
-		return new Integer(value);
-	}
-};
+const spi = defineInteger<number, Integer>(
+	numberOps,
+	value => new Integer(value)
+);

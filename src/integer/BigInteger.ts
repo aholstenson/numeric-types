@@ -4,7 +4,7 @@ import { bigIntOps } from '../spi/bigIntOps.js';
 
 import { AbstractInteger } from './AbstractInteger.js';
 import type { Integer } from './Integer.js';
-import type { IntegerSPI } from './IntegerSPI.js';
+import { defineInteger, type IntegerSPI } from './IntegerSPI.js';
 import { SPI, VALUE } from './ops/symbols.js';
 
 /**
@@ -15,6 +15,41 @@ import { SPI, VALUE } from './ops/symbols.js';
 export class BigInteger extends AbstractInteger<bigint> {
 	public get [SPI](): IntegerSPI<bigint, this> {
 		return spi as IntegerSPI<bigint, this>;
+	}
+
+	/**
+	 * The value zero.
+	 */
+	public static get ZERO(): BigInteger {
+		return spi.ZERO;
+	}
+
+	/**
+	 * The value one.
+	 */
+	public static get ONE(): BigInteger {
+		return spi.ONE;
+	}
+
+	/**
+	 * The value minus one.
+	 */
+	public static get MINUS_ONE(): BigInteger {
+		return spi.MINUS_ONE;
+	}
+
+	/**
+	 * The value two.
+	 */
+	public static get TWO(): BigInteger {
+		return spi.TWO;
+	}
+
+	/**
+	 * The value ten, which is the base that decimal exponents use.
+	 */
+	public static get TEN(): BigInteger {
+		return spi.TEN;
 	}
 
 	/**
@@ -60,10 +95,7 @@ export class BigInteger extends AbstractInteger<bigint> {
 	}
 }
 
-const spi: IntegerSPI<bigint, BigInteger> = {
-	ops: bigIntOps,
-
-	create(value) {
-		return new BigInteger(value);
-	}
-};
+const spi = defineInteger<bigint, BigInteger>(
+	bigIntOps,
+	value => new BigInteger(value)
+);

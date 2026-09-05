@@ -28,6 +28,41 @@ export class Decimal extends AbstractDecimal<number> {
 		return spi as DecimalSPI<number, this>;
 	}
 
+	/**
+	 * The value zero, without digits after the decimal point.
+	 */
+	public static get ZERO(): Decimal {
+		return spi.ZERO;
+	}
+
+	/**
+	 * The value one, without digits after the decimal point.
+	 */
+	public static get ONE(): Decimal {
+		return spi.ONE;
+	}
+
+	/**
+	 * The value minus one, without digits after the decimal point.
+	 */
+	public static get MINUS_ONE(): Decimal {
+		return spi.MINUS_ONE;
+	}
+
+	/**
+	 * The value two, without digits after the decimal point.
+	 */
+	public static get TWO(): Decimal {
+		return spi.TWO;
+	}
+
+	/**
+	 * The value ten, without digits after the decimal point.
+	 */
+	public static get TEN(): Decimal {
+		return spi.TEN;
+	}
+
 	public static fromNumber(a: number): Decimal {
 		return convertNumber(spi, a);
 	}

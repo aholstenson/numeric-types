@@ -35,6 +35,21 @@ export interface DecimalSPI<C, D extends AbstractDecimal<C>> {
 	 * The value one, without digits after the decimal point.
 	 */
 	readonly ONE: D;
+
+	/**
+	 * The value minus one, without digits after the decimal point.
+	 */
+	readonly MINUS_ONE: D;
+
+	/**
+	 * The value two, without digits after the decimal point.
+	 */
+	readonly TWO: D;
+
+	/**
+	 * The value ten, without digits after the decimal point.
+	 */
+	readonly TEN: D;
 }
 
 /**
@@ -56,6 +71,9 @@ export function defineDecimal<C, D extends AbstractDecimal<C>>(
 		create,
 
 		ZERO: create(ops.ZERO, 0),
-		ONE: create(ops.ONE, 0)
+		ONE: create(ops.ONE, 0),
+		MINUS_ONE: create(ops.negate(ops.ONE), 0),
+		TWO: create(ops.TWO, 0),
+		TEN: create(ops.TEN, 0)
 	};
 }

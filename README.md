@@ -226,6 +226,29 @@ you receive is always exact. Use `BigDecimal` for values that need more room.
 The two types can not be mixed in one operation. An operation that receives a
 `Decimal` and a `BigDecimal` throws a `MathError`.
 
+### Constants
+
+Both types carry the common values as static constants. They have no digits
+after the decimal point, and they are shared instances, so reading one costs
+nothing:
+
+```javascript
+import { Decimal, add } from 'numeric-types/decimal';
+
+const total = add(Decimal.parse('1.25'), Decimal.ONE);
+```
+
+| Constant | Value |
+|----------|-------|
+| `ZERO` | `0` |
+| `ONE` | `1` |
+| `MINUS_ONE` | `-1` |
+| `TWO` | `2` |
+| `TEN` | `10` |
+
+A constant belongs to its own type, so use `Decimal.ONE` with a `Decimal` and
+`BigDecimal.ONE` with a `BigDecimal`.
+
 ### Operations
 
 These operations are available from `numeric-types/decimal`. Import them
@@ -386,6 +409,28 @@ the safe range of `number`. Use `BigInteger` for values that are larger.
 
 The two types can not be mixed in one operation. An operation that receives an
 `Integer` and a `BigInteger` throws a `MathError`.
+
+### Constants
+
+Both types carry the common values as static constants. They are shared
+instances, so reading one costs nothing:
+
+```javascript
+import { Integer, add } from 'numeric-types/integer';
+
+const next = add(Integer.parse('41'), Integer.ONE);
+```
+
+| Constant | Value |
+|----------|-------|
+| `ZERO` | `0` |
+| `ONE` | `1` |
+| `MINUS_ONE` | `-1` |
+| `TWO` | `2` |
+| `TEN` | `10` |
+
+A constant belongs to its own type, so use `Integer.ONE` with an `Integer` and
+`BigInteger.ONE` with a `BigInteger`.
 
 ### Operations
 

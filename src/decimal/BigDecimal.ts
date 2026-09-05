@@ -24,6 +24,41 @@ export class BigDecimal extends AbstractDecimal<bigint> {
 		return spi as DecimalSPI<bigint, this>;
 	}
 
+	/**
+	 * The value zero, without digits after the decimal point.
+	 */
+	public static get ZERO(): BigDecimal {
+		return spi.ZERO;
+	}
+
+	/**
+	 * The value one, without digits after the decimal point.
+	 */
+	public static get ONE(): BigDecimal {
+		return spi.ONE;
+	}
+
+	/**
+	 * The value minus one, without digits after the decimal point.
+	 */
+	public static get MINUS_ONE(): BigDecimal {
+		return spi.MINUS_ONE;
+	}
+
+	/**
+	 * The value two, without digits after the decimal point.
+	 */
+	public static get TWO(): BigDecimal {
+		return spi.TWO;
+	}
+
+	/**
+	 * The value ten, without digits after the decimal point.
+	 */
+	public static get TEN(): BigDecimal {
+		return spi.TEN;
+	}
+
 	public static fromNumber(a: number): BigDecimal {
 		return convertNumber(spi, a);
 	}
